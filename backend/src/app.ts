@@ -11,11 +11,29 @@
 
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import entityRoutes from "./routes";
 import authRoutes from "../auth/authRoutes";
 import personagemRoutes from "../personagem/personagemRoutes";
+import ticketRoutes from "../tickets/ticketRoutes";
+import adminRoutes from "../auth/adminRoutes";
+import { AppError } from "./errors/AppError";
 
 const app = express();
+
+app.use(helmet());
+
+// Só em /auth/login e /auth/register (força bruta de senha e spam de
+// contas) — /auth/me não precisa, é só leitura de quem já tem token válido.
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Muitas tentativas. Tente de novo em alguns minutos." },
+});
+app.use(["/auth/login", "/auth/register"], authLimiter);
 
 // Origem explícita (regra do CLAUDE.md: nunca "origin: true"/"*" numa API
 // que vai ganhar POST/PUT/DELETE). O front (RPGCardGame-frontend) roda em
@@ -33,6 +51,8 @@ app.use(express.json({ limit: "100kb" }));
 
 app.use("/auth", authRoutes);
 app.use("/personagens", personagemRoutes);
+app.use("/tickets", ticketRoutes);
+app.use("/admin", adminRoutes);
 app.use(entityRoutes);
 
 // Rota não mapeada.
@@ -40,8 +60,17 @@ app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: "Rota não encontrada" });
 });
 
-// Error handler central: nunca expõe stack trace ao cliente (regra do CLAUDE.md).
+// Error handler central: nunca expõe stack trace ao cliente (regra do
+// CLAUDE.md). AppError é erro esperado (validação, dono errado, não
+// encontrado etc.) — a mensagem dela é segura de mostrar. Qualquer outro
+// erro (bug, exceção não prevista) vira 500 genérico, e só o servidor vê o
+// detalhe real via console.error.
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  if (err instanceof AppError) {
+    res.status(err.statusCode).json({ error: err.message });
+    return;
+  }
+
   console.error(err);
   res.status(500).json({ error: "Erro interno do servidor" });
 });

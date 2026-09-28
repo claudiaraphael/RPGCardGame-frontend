@@ -25,38 +25,49 @@ de IA não substituem, só apoiam.
   — é uma base de referência rica: todo o shape real de cada categoria da
   D&D API, já validado, num arquivo só, sem precisar bater na rede de novo
   pra consultar.
-- ✅ **SQLite conectado**, com sessão de login persistida nele (não em
-  memória) e cache local das entidades da D&D API (`dnd_cache`).
-- ✅ **CORS + sessão por cookie configurados corretamente** para o front
-  rodar em `localhost:5500` (Live Server) consumindo a API em
-  `localhost:3000`.
-- 🚧 Autenticação de usuário e os estados de jogo (personagem, deck, carta,
-  combate) estão em construção — ver [`backend/to-do/todo.md`](backend/to-do/todo.md)
-  pro roadmap completo.
+- ✅ **SQLite conectado** (`better-sqlite3`), guardando usuários, personagens
+  e um cache local das entidades da D&D API (`dnd_cache` — hoje só
+  alimentado pelo seed; nenhuma rota em produção lê dele ainda, ver
+  "Arquitetura" abaixo).
+- ✅ **Autenticação por JWT** (`POST /auth/register`, `POST /auth/login`,
+  `GET /auth/me`) — token vai no header `Authorization: Bearer`, sem
+  cookie nem sessão.
+- ✅ **CORS com origem explícita** para o front rodar em `localhost:5500`
+  (Live Server) consumindo a API em `localhost:3000`.
+- ✅ **CRUD de personagem** (`/personagens`, atrás de login — cada usuário
+  só vê/edita os próprios, dono verificado pelo token, nunca por campo do
+  corpo da requisição).
+- 🚧 Estados de jogo (deck, carta, mão, combate) ainda em construção — ver
+  [`backend/to-do/todo.md`](backend/to-do/todo.md) pro roadmap completo.
 
 ## Arquitetura
 
 ```
-RPGCardGame-frontend (repo próprio)          RPGCardGame (este repo)
-┌───────────────────────┐    REST     ┌──────────────────────────────┐
-│  Interface HTML/CSS/JS │ ──────────▶ │  API secundária (Node + TS)   │
-│  (Live Server, :5500)  │ ◀────────── │  Express + SQLite (:3000)     │
-└───────────────────────┘             └──────────────┬───────────────┘
-                                                       │ REST
-                                                       ▼
-                                          D&D 5e API (api externa)
-                                          https://www.dnd5eapi.co
+frontend/ (mesmo repo, Live Server :5500)
+   │  fetch (JSON — JWT no header Authorization quando autenticado, sem cookie)
+   ▼
+backend/src/app.ts (Express, :3000)
+   ├─ /auth/*         → auth/authRoutes.ts (registro/login, JWT)
+   ├─ /personagens/*  → personagem/personagemRoutes.ts (CRUD, dono = req.auth.sub)
+   └─ /<24 entidades> → entidades-dnd/schemas/*.schema.ts
+                            │
+                            ▼
+                   fetchFromDndApi (axios) ──▶ D&D 5e API externa
+                   https://www.dnd5eapi.co — chamada a cada request,
+                   pras 24 entidades (não só monsters), sem passar
+                   pelo dnd_cache (SQLite)
 ```
 
-O front nunca fala direto com a D&D API — só com esta API secundária, que
-consulta a D&D API por trás e devolve dado já validado.
+O front nunca fala direto com a D&D API — só com este backend, que
+consulta a D&D API por trás (pra qualquer uma das 24 entidades, a cada
+request) e devolve dado já validado por Zod.
 
 ## O que tem aqui dentro
 
 ```
 backend/
 ├── src/
-│   ├── app.ts                # Express: CORS+credentials, sessão, rotas, error handler
+│   ├── app.ts                # Express: CORS, rotas, error handler central
 │   ├── server.ts              # liga o app.ts na porta 3000
 │   └── routes/
 │       ├── entityRouter.ts    # fábrica genérica: GET / e GET /:index por entidade
@@ -66,18 +77,31 @@ backend/
 │   ├── schema.ts               # tabela dnd_cache (cache da API externa)
 │   ├── seedDndCache.ts          # popula o cache, com retry
 │   └── runSeed.ts                # roda o seed (spells já ligado)
-├── auth/
-│   └── sessionStore.ts         # sessão de login persistida no SQLite
+├── auth/                       # registro/login/JWT (authRoutes, authService,
+│                                # requireAuth, userRepository, passwordHash)
+├── personagem/                  # CRUD de personagem: personagemRoutes.ts,
+│                                # personagemRepository.ts, personagemSchema.ts
+│                                # (atrás de login, dono = req.auth.sub)
 ├── entidades-dnd/
 │   ├── dnd-api-client.ts       # cliente axios genérico pra D&D API
 │   └── schemas/                # um schema Zod por categoria (spells, monsters, classes...)
 ├── testes/                     # notas de design pra quando testes automatizados entrarem
 ├── dado/d20.ts                  # rolagem de d20
-├── personagem/                   # modelagem do personagem (em construção)
+├── Systems/Systems.js            # exploração de arquitetura ECS (em construção pela autora)
 └── to-do/
     ├── todo.md                   # roadmap completo
     └── documentation/
         └── dnd-full-data.json     # dump completo e validado das 24 entidades
+
+frontend/                       # HTML/CSS/JS puro, sem bundler (Live Server :5500)
+├── index.html                  # Início + CRUD de personagem (redesign "AuroraRPG")
+└── components/                  # uma pasta por página, ver frontend/CLAUDE.md
+    ├── shared/                    # tokens/base/components.css + session.js
+    ├── landing/                   # CSS/JS do index.html
+    ├── login/
+    ├── suporte/                   # Central de Suporte Arcano (/tickets)
+    └── bestiario/
+        └── monster-index.html      # busca, filtros completos, paginação, statblock
 ```
 
 ## Pré-requisitos
@@ -94,8 +118,8 @@ npm install
 Copie `backend/.env.example` para `backend/.env` e preencha:
 
 - `DND_BASE_URL` — URL pública da D&D API (`https://www.dnd5eapi.co`)
-- `SESSION_SECRET` — qualquer string aleatória local, usada só pra assinar
-  o cookie de sessão (não precisa ser a mesma em cada máquina)
+- `JWT_SECRET` — qualquer string longa e aleatória local, usada só pra
+  assinar os access tokens (não precisa ser a mesma em cada máquina)
 
 ## Rodando o servidor
 
@@ -138,9 +162,12 @@ uma chamada a mais em `db/runSeed.ts`, reaproveitando o mesmo par
 
 ## Docker (guia rápido — caminho feliz)
 
-> ⚠️ **Status:** os Dockerfiles foram escritos mas **ainda não foram
-> buildados nem testados** (o Docker Desktop estava desligado). Se algum
-> passo abaixo falhar, é esperado ajustar — anote o erro.
+> ✅ **Status:** as duas imagens (backend e frontend) já foram buildadas e
+> testadas de ponta a ponta. **Sem `docker-compose`** — decisão do
+> projeto: duas imagens independentes, cada uma com seu próprio
+> `docker build`/`docker run`. Guia completo (comandos de CLI do dia a
+> dia, como ler/editar um `Dockerfile`, solução de problemas) em
+> [`DOCKER.md`](DOCKER.md).
 
 Pré-requisito: Docker Desktop **aberto e rodando**.
 
@@ -183,6 +210,10 @@ docker run -p 5500:80 rpgcardgame-frontend
 Abra `http://localhost:5500`. A porta **5500** importa: o CORS do backend só
 libera `localhost:5500` e `127.0.0.1:5500`.
 
+Mais detalhes (comandos de `docker ps`/`logs`/`exec`, como ler um
+`Dockerfile`, o que fazer se uma porta já estiver em uso etc.) em
+[`DOCKER.md`](DOCKER.md).
+
 ## Checando os tipos
 
 ```bash
@@ -196,7 +227,7 @@ npx tsc --noEmit
 | `npx tsc --noEmit` | ✅ checa os tipos |
 | `npm run build` | ✅ compila para `dist/` |
 | `npm run dev` | ✅ nodemon + ts-node `src/server.ts` → `http://localhost:3000` |
-| `npm start` | ✅ `node dist/server.js` (rodar depois de `npm run build`) |
+| `npm start` | ✅ `node dist/src/server.js` (rodar depois de `npm run build`) |
 | `npx ts-node db/runSeed.ts` | ✅ popula o SQLite a partir da D&D API |
 
 ## Ferramentas de desenvolvimento
@@ -209,11 +240,13 @@ npx tsc --noEmit
 
 ## Segurança
 
-- Segredos (inclusive `SESSION_SECRET`) ficam só em `backend/.env`, fora do
+- Segredos (inclusive `JWT_SECRET`) ficam só em `backend/.env`, fora do
   git (`.gitignore` cobre `.env`, `*.env.*` e o `database.sqlite` gerado
   localmente).
-- CORS com origem explícita + `credentials: true`, nunca `*`.
-- Cookie de sessão `httpOnly`, `sameSite: "lax"`.
+- CORS com origem explícita, nunca `*`. Sem `credentials: true` — o JWT vai
+  no header `Authorization`, não em cookie, então não precisa de CORS com
+  credenciais.
+- Senhas com `argon2`; access token JWT de 15 min, sem refresh token.
 - Todo dado vindo da API externa é validado com Zod antes de ser devolvido
   ou persistido.
 - Error handler central nunca expõe stack trace ao cliente.
@@ -224,11 +257,15 @@ npx tsc --noEmit
 Roadmap completo em [`backend/to-do/todo.md`](backend/to-do/todo.md). Em
 resumo, o que falta:
 
-1. terminar a modelagem de usuário/personagem/build e ligar a autenticação;
-2. estender o seed pras outras 23 entidades (hoje só `spells` está no banco);
-3. gerador de cartas a partir dos dados já validados da D&D API;
-4. front consumindo a API de ponta a ponta (fetch, estado do jogo, combate);
-5. Docker + vídeo de entrega.
+1. camada de admin (`role` já existe no usuário e no JWT, falta o
+   middleware e as rotas que usam isso);
+2. sistema de tickets (sugestão de feature, bug, suporte);
+3. estender o seed pras outras 23 entidades (hoje só `spells` está no banco)
+   e decidir se as rotas passam a ler do `dnd_cache`;
+4. gerador de cartas a partir dos dados já validados da D&D API;
+5. nova UI do front consumindo a API de ponta a ponta (login, personagem,
+   tickets, estado do jogo, combate);
+6. vídeo de entrega.
 
 ## Documentação extra
 

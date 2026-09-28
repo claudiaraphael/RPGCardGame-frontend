@@ -10,11 +10,17 @@ de estado, depuração, design de fronteiras e raciocínio assíncrono, consumin
 pública [D&D 5e API](https://www.dnd5eapi.co/). O requerimento oficial está em
 `backend/to-do/documentation/Requerimento_MVP.pdf`.
 
-**Regra da disciplina: pelo menos 50% do código precisa ser escrito pela própria
-autora.** Por isso o repositório passou por uma faxina (commit `796594d`) que
-removeu a arquitetura em camadas que já estava montada. Ao ajudar aqui, prefira
-explicar, revisar e apontar caminhos em vez de entregar implementações completas
-— a menos que seja pedido explicitamente.
+**Regra dos 50% (esclarecida em 2026-09-27): só vale pra quem usou um dos
+exemplos citados no requerimento da disciplina.** Como este projeto é ideia
+própria da autora (não um dos exemplos), a regra não se aplica aqui — ela
+confirmou que está liberado implementar de verdade (não só esqueleto/
+explicação) quando ela pedir. A faxina antiga (commit `796594d`, que
+removeu uma arquitetura em camadas já montada) foi feita sob a leitura
+anterior, mais cautelosa, da regra; não é preciso repetir esse cuidado daqui
+pra frente. Ainda assim, **`auth/User.ts` e `Systems/Systems.js` continuam
+sendo trabalho manual ativo da autora** (ver abaixo) — não avançar neles sem
+pedido explícito é sobre não pisar no trabalho dela, não sobre a regra dos
+50%.
 
 Os comentários do código são em português e têm propósito didático (explicam
 *por que* de cada escolha). Preserve esse tom ao editar.
@@ -53,11 +59,35 @@ Os comentários do código são em português e têm propósito didático (expli
   de desenhar uma tabela ou um gerador de carta em cima dela. Esse
   processo já pegou e corrigiu dois bugs reais de schema (ver "Bugs já
   encontrados e corrigidos" abaixo).
-- **Novo: landing page vai mostrar um índice de monstros consumindo a
-  D&D API externa direto** (decisão da autora, ver commit `7677347`) —
-  diferente do resto da arquitetura do jogo, que bate no SQLite
-  (`dnd_cache`) e não na API externa a cada request. Ainda não
-  implementado no código, só decidido/documentado.
+- **Landing page do índice de monstros: implementada.** Só existe uma
+  versão — `frontend/components/bestiario/monster-index.html` (a versão
+  simples antiga, `monstros.html`/`.js`/`.css`, era um esboço descartável e
+  foi removida). CSS/JS num arquivo por componente
+  (`frontend/components/bestiario/monster-index.css`/`.js` +
+  `monster-api.js`, o cliente da API), seguindo o mesmo padrão das outras
+  páginas do front — uma pasta por página em `frontend/components/`, ver
+  `frontend/CLAUDE.md`. Busca,
+  filtros por tipo/CR/tamanho/alinhamento (chips de tipo gerados em
+  runtime a partir dos dados carregados, não mais uma lista fixa
+  incompleta no HTML), paginação client-side da tabela e statblock
+  inteiro. Consome `GET /monsters` e `GET /monsters/:index` do backend,
+  que batem na D&D API externa a cada request — **isso vale pra todas as
+  24 entidades, não só monsters**: nenhuma rota em produção lê do
+  `dnd_cache` hoje, que é escrito só pelo seed. Ligar as rotas ao cache é
+  dívida técnica registrada, não resolvida ainda. `prefetchBatch()`
+  (`monster-api.js`) tenta de novo índices que falharam na primeira
+  passada antes de desistir, e a página avisa (com botão de retry manual)
+  quando algum monstro não carrega — evita que categorias inteiras
+  sumam do filtro por causa de uma falha de rede pontual e silenciosa.
+- **CRUD de personagem implementado** (`backend/personagem/`:
+  `personagemRoutes.ts`, `personagemRepository.ts`, `personagemSchema.ts`),
+  registrado como `/personagens` em `app.ts`. Mesmo padrão de `auth/`:
+  tabela própria no SQLite (`personagens`, `user_id REFERENCES users(id)`),
+  Zod validando entrada, `requireAuth` em todas as rotas, dono sempre
+  verificado por `req.auth.sub` (nunca por campo do corpo da requisição).
+  Placeholder de campos (nome/raça/classe/nível/hp/mp) até o modelo real
+  de personagem ser desenhado — trocar os campos não deve exigir mexer no
+  resto do CRUD.
 - **Autenticação/estado de jogo em construção pela autora, à mão**, em
   `backend/auth/User.ts` e `backend/Systems/Systems.js` (explorando
   um desenho tipo ECS — Entities/Components/Systems, irmã de `src/`, que
@@ -78,8 +108,11 @@ Os comentários do código são em português e têm propósito didático (expli
   talentos, perícias, equipamento, magias).
 - **O frontend vive neste repositório, em `frontend/`**: HTML/CSS/JS puro
   sem bundler, servido em dev pela extensão Live Server do VS Code em
-  `localhost:5500`/`127.0.0.1:5500`. Arquivos principais: `index.html`,
-  `style.css`, `script.js` (ainda vazio), `Dockerfile` (nginx:alpine) e
+  `localhost:5500`/`127.0.0.1:5500`. Estrutura: `index.html` na raiz
+  (entrada — precisa ficar aí, é o documento padrão do nginx/Live Server)
+  + `components/` com uma pasta por página (`shared/`, `landing/`,
+  `login/`, `suporte/`, `bestiario/`) — ver detalhe completo em
+  `frontend/CLAUDE.md`. Também tem `Dockerfile` (nginx:alpine) e
   `to-do.md` (checklist do front). Ele começou num repo separado
   (`C:\Users\claud\portfolio\JavaScript\RPGCardGame\`, remote
   misconfigurado, nunca publicado) e foi copiado pra cá pra ficar no
@@ -101,12 +134,12 @@ Os comentários do código são em português e têm propósito didático (expli
   installation`. Fix: `apt-get install python3 make g++` antes do
   `npm ci` nos dois estágios (removido de novo via `apt-get purge` no
   estágio final, pra não engordar a imagem).
-- **`Dockerfile` e `.dockerignore` reais não são versionados** (variam
-  com `docker init` etc. — ver comentário no `.gitignore`). O conteúdo
-  oficial testado fica espelhado em `backend/docker.exemple/` (
-  `docker.exemple` e `dockerignore.exemple`) — se algum dia rodar
-  `docker init` de novo e ele sobrescrever esses arquivos, é esse par que
-  tem o conteúdo correto pra restaurar.
+- **`backend/Dockerfile` e `.dockerignore` são versionados direto**
+  (2026-09-28, a pedido da autora — requisito da disciplina: o Dockerfile
+  precisa estar no git dos dois projetos). Até então ficavam no
+  `.gitignore` (variam com `docker init`) e só uma cópia em
+  `backend/docker.exemple/` era versionada; esse espelho foi removido —
+  não existe mais, não recriar.
 - **`RUN touch .env`**: `process.loadEnvFile()` (em `auth/` e
   `entidades-dnd/`) lança erro se o arquivo não existe; `.env` real não
   vai pra imagem, as variáveis entram via `--env-file`.
@@ -117,33 +150,68 @@ Os comentários do código são em português e têm propósito didático (expli
 - **`tsconfig.json` exclui `to-do/`** do typecheck/build — tinha um
   rascunho de pseudocódigo (`to-do/documentation/Inventario/Inventario.ts`)
   que quebrava `npm run build` dentro do container.
-- **Próximos passos**: repetir pro `Dockerfile` do front (`frontend/`)
-  (nginx:alpine servindo estáticos) e confirmar o CORS entre os dois
-  containers.
+- **Frontend também buildado e testado (2026-09-27)**: `frontend/Dockerfile`
+  trocou de `COPY <lista de arquivos>` pra `COPY . .` (o front ganha
+  página nova com frequência; allowlist manual precisaria de edição toda
+  hora) + `.dockerignore` mais completo (fora da imagem: notas internas
+  como `documentacao/`, `to-do.md`, `CLAUDE.md`, e ferramental local como
+  `.vscode/`, `.claude/`). Testado servindo `index.html`,
+  `indexMonstros/monster-index.html`, `login.html`, `tickets.html` e
+  `suporte/suporte.html` (paths de antes da reorganização em
+  `components/` — ver abaixo), todos `200`; arquivos internos confirmados
+  fora (`404`). CORS entre os dois containers dockerizados testado e
+  funcionando (`localhost:5500` → `localhost:3000`). **Pendente**:
+  rebuild/reteste depois da reorganização do front em
+  `frontend/components/` (2026-09-28) — `COPY . .` não deveria exigir
+  mudança no `Dockerfile`, mas não foi confirmado (Docker Desktop estava
+  fechado). `tickets.html` não existe mais (rota absorvida por
+  `suporte/suporte.html`, hoje em `components/suporte/`).
+- **Backend rebuildado com as rotas/deps desta sessão** (helmet,
+  express-rate-limit, `/tickets`, `/admin`) e re-testado.
+- **Sem `docker-compose` neste projeto — decisão explícita da autora**
+  (duas imagens independentes, `docker build`+`docker run` cada uma; o
+  `fetch` roda no navegador, que já enxerga as duas portas do host, então
+  não há necessidade de rede compartilhada). Não sugerir compose de novo
+  sem pedido explícito dela.
+- **Guia completo de uso do Docker neste projeto**: `DOCKER.md` (raiz) —
+  build/run passo a passo, comandos de CLI do dia a dia, como ler/editar
+  um `Dockerfile` (inclusive por que o backend é 2 estágios e o front só
+  1), e solução de problemas comuns.
 
-## Plano em andamento: monster-index / landing page (entrega 27/set 00h)
+## MVP v2 — admin, erro/segurança, tickets (concluído em 2026-09-27)
 
-Trabalho de hoje, dividido:
+Landing page do monster-index, CRUD de personagem e a rodada abaixo já
+entregues (ver "Estado atual" acima). A pedido explícito da autora:
 
-- **Rota do backend pro monster-index: reaproveitar a existente.**
-  `GET /monsters` e `GET /monsters/:index` (`src/routes/index.ts` +
-  `entidades-dnd/schemas/monsters.schema.ts`) já batem na D&D API externa
-  a cada request (`fetchFromDndApi`, não leem do `dnd_cache`) — é
-  exatamente o comportamento que a landing page precisa. **Decisão: não
-  criar rota nova**, o front consome essas duas direto.
-- **Autora**: HTML/CSS/JS da landing page (em `frontend/`) e o Docker do backend (deixar o
-  `docker build` funcionando de ponta a ponta — já testado uma vez nesta
-  sessão, ver seção "Docker" acima; ela está retestando/ajustando numa
-  aba separada). Git (commits e push) fica com ela em ambos os repos.
-- **Claude**: normalizar o shape dos dados nas próprias rotas (código),
-  só se/quando precisar pro front consumir — não é tarefa de
-  documentação.
-- Branch de trabalho: `monster-index` (checkout feito nesta conversa, a
-  pedido explícito da autora — regra geral continua sendo ela quem roda
-  git).
-- `Systems.js` voltou pra `backend/Systems/Systems.js` (tinha ido pra
-  `backend/src/Systems/` num commit anterior; revertido pra bater com a
-  documentação, a pedido da autora).
+- **Camada de erro**: `backend/src/errors/AppError.ts` (erro com
+  `statusCode`+`message` pra casos esperados) e `asyncHandler.ts`
+  (wrapper de rota assíncrona, evita repetir `try/catch`). Usados só nas
+  rotas novas (tickets/admin) — `authRoutes.ts`/`personagemRoutes.ts`
+  não são tocados sem pedido.
+- **Camada de segurança**: `helmet` (headers) e `express-rate-limit`
+  (limita `/auth/login` e `/auth/register` contra força bruta) —
+  dependências novas, `npm audit` depois de instalar.
+- **Camada de admin**: `role` (`"user"|"admin"`) já existe na tabela
+  `users` e no payload do JWT (`requireAuth.ts` já decodifica).
+  `requireAdmin.ts` (middleware) e `promoteToAdmin.ts` (script
+  `ts-node`, sem rota HTTP — evita autopromoção) fecham a peça que
+  faltava.
+- **Sistema de tickets** (`backend/tickets/`): mesmo padrão de
+  `personagem/` — `ticketRepository.ts`/`ticketSchema.ts`/
+  `ticketRoutes.ts`. Tipos: `feature`, `bug`, `support`, `pedidos` (esse
+  último e o campo `priority` foram acrescentados depois, pra bater com o
+  mockup da "Central de Suporte Arcano" em `frontend/documentacao/`) —
+  migração feita preservando os dados que já existiam no
+  `database.sqlite` local (ver comentário em `ticketRepository.ts`).
+  Usuário cria e vê os próprios; admin vê/atualiza todos. Front:
+  `frontend/components/login/login.html` (tela de entrar/criar conta) +
+  `frontend/components/suporte/suporte.html` (Central de Suporte Arcano —
+  única tela de tickets hoje; a versão simples antiga, `tickets.html`,
+  era um esboço redundante e foi removida). `suporte.html` já consome de
+  verdade `POST /tickets`/`GET /tickets/me`.
+- **Docker**: as duas imagens (backend e frontend) buildadas, rodando e
+  testadas — ver seção "Docker" acima e `DOCKER.md` (raiz) pro guia
+  completo. Sem `docker-compose` — decisão explícita da autora.
 
 ## Bugs já encontrados e corrigidos (via validação contra dado real)
 
@@ -213,9 +281,7 @@ RPGCardGame/
 │   │       ├── dnd-full-data.json   # dump completo e validado das 24 entidades (2.027 itens) — fonte de referência rica pro shape real de qualquer entidade
 │   │       ├── estudos/              # guias de estudo próprios da autora (ver "Estado atual" acima)
 │   │       └── ...             # mapas da API, quickstart, código de referência antigo
-│   ├── docker.exemple/
-│   │   ├── docker.exemple         # cópia versionada do Dockerfile real (que é gitignorado)
-│   │   └── dockerignore.exemple   # idem pro .dockerignore
+│   ├── Dockerfile / .dockerignore  # versionados direto (sem espelho — ver "Docker" acima)
 │   ├── .env                   # DND_BASE_URL + JWT_SECRET (URL pública + segredo local, sem valor real no git)
 │   ├── tsconfig.json          # rootDir "." e include "**/*.ts", exclude ["node_modules","dist","to-do"]
 │   └── package.json
