@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Central de Suporte Arcano - AuroraRPG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Lora:ital,wght@0,500;0,600;1,400&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="../shared/components.css">
+  <link rel="stylesheet" href="support.css">
+</head>
+<body>
+
+  <div class="pixel-orb orb-1"></div>
+  <div class="pixel-orb orb-2"></div>
+  <div class="pixel-orb orb-3"></div>
+  <div class="pixel-orb orb-4"></div>
+
+  <header>
+    <div class="header-content">
+      <a href="../../index.html" class="brand">
+        <div class="brand-emblem">A</div>
+        <div class="brand-title">
+          <h1>AuroraRPG</h1>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="../../index.html">Início</a></li>
+        <li><a href="../bestiario/monster-index.html">Bestiário</a></li>
+        <li><a href="../../index.html#charactersSection">Personagens</a></li>
+        <li><a href="suporte.html" class="active">Suporte</a></li>
+      </ul>
+
+      <!-- Preenchido em runtime por ../shared/session.js (renderizarAuthBar) -->
+      <div class="auth-bar" id="authBar" data-login-href="../login/login.html"></div>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-hero-title">
+      <h2>Central de Suporte Arcano</h2>
+      <p>Envie pedidos, sugestões de jogo e relate anomalias para os guardiões do AuroraRPG</p>
+    </div>
+
+    <div class="support-layout" id="supportLayout">
+      <section class="support-card">
+        <div class="category-tabs" id="catTabs">
+          <button type="button" class="cat-tab" data-cat="pedidos">Pedidos</button>
+          <button type="button" class="cat-tab" data-cat="feature">Sugestões de Features</button>
+          <button type="button" class="cat-tab active" data-cat="bug">Erros / Bugs</button>
+          <button type="button" class="cat-tab" data-cat="support">Suporte Geral</button>
+        </div>
+
+        <form class="support-form-body" id="supportForm">
+          <div class="form-group">
+            <label class="form-label" for="ticketSubject">Assunto do Chamado</label>
+            <input type="text" id="ticketSubject" class="form-input" placeholder="Ex: Falha no cálculo de dano crítico do Ladino..." minlength="3" maxlength="120" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nível de Prioridade</label>
+            <div class="pill-group priority-pills" id="priorityContainer">
+              <div class="pill" data-val="baixa">Baixa</div>
+              <div class="pill active" data-val="media">Média</div>
+              <div class="pill" data-val="alta">Alta</div>
+              <div class="pill" data-val="critica">Crítica</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="ticketDetails">Descrição Detalhada &bull; Passos / Ideia</label>
+            <textarea id="ticketDetails" class="form-textarea" rows="6" minlength="1" maxlength="4000" placeholder="Descreva com detalhes o que aconteceu, passos para reproduzir ou a ideia de nova mecânica para o AuroraRPG..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            <span>&#9889;</span> Enviar Chamado
+          </button>
+        </form>
+      </section>
+
+      <aside class="history-card">
+        <div class="history-header">
+          <span>Histórico de Chamados</span>
+          <span style="font-size: 0.75rem; color: #94A3B8; font-family: var(--font-mono);" id="ticketCount">0 chamados</span>
+        </div>
+
+        <div class="history-list" id="ticketHistoryList">
+          <!-- Preenchido por support.js -->
+        </div>
+      </aside>
+    </div>
+
+    <div class="gated-box" id="gatedBox" style="display: none;">
+      <h3 style="font-family: var(--font-display); font-size: 1.8rem; color: var(--c-yellow);">
+        Acesso Exclusivo para Jogadores Autenticados
+      </h3>
+      <p style="color: #CBD5E1; max-width: 500px;">
+        Para evitar spam e associar seus chamados ao seu perfil de aventureiro, você precisa estar autenticado no sistema.
+      </p>
+      <button type="button" class="btn-primary" id="btnGoToLogin">
+        Ir para o Login
+      </button>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="../shared/session.js"></script>
+  <script src="support.js"></script>
+</body>
+</html>

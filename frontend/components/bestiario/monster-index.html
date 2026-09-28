@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grimoire Index - RPG Monster Compendium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Lora:ital,wght@0,500;0,600;1,400;1,600&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="../shared/components.css">
+  <link rel="stylesheet" href="monster-index.css">
+</head>
+<body>
+
+  <!-- Floating Ambient Orbs from Figma Draft -->
+  <div class="pixel-orb orb-1"></div>
+  <div class="pixel-orb orb-2"></div>
+  <div class="pixel-orb orb-3"></div>
+  <div class="pixel-orb orb-4"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <a href="#" class="brand">
+        <div class="brand-emblem">M</div>
+        <div class="brand-title">
+          <h1>Monster Index</h1>
+          <p>RPG Bestiary &amp; Card Compendium</p>
+        </div>
+      </a>
+
+      <div class="header-badges">
+        <span class="badge-dnd">D&amp;D API 2014</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Creature Type Chips Bar: só o chip "All Monsters" é fixo — os demais
+       são gerados em runtime a partir dos tipos que realmente vêm carregados
+       (ver gerarChipsDeTipo() mais abaixo), pra nunca faltar categoria. -->
+  <nav class="types-bar-wrapper">
+    <div class="types-bar" id="typesBar">
+      <div class="type-chip active" data-type="all">All Monsters</div>
+    </div>
+  </nav>
+
+  <!-- Hero Spotlight: Stepped Solar Flare & Monster Battle Card (Figma Rectangle 2/Pad... Inspo) -->
+  <section class="spotlight-hero">
+    <div class="solar-flare-container">
+      <div class="solar-stage">
+        <div class="stepped-sunburst"></div>
+        
+        <div class="rpg-battle-card" id="heroCard">
+          <div class="card-top-bar">
+            <span class="card-monster-name" id="cardName">Aboleth</span>
+            <span class="card-mana-cost" id="cardCost">CR 10</span>
+          </div>
+          <div class="card-art-frame">
+            <img id="cardArt" class="card-art-img" src="" alt="Monster Art">
+          </div>
+          <div class="card-type-bar" id="cardType">Aberration &bull; Large</div>
+          <div class="card-text-box">
+            <span class="card-signature-move" id="cardAbility">Mucous Cloud:</span>
+            <span id="cardDesc"> While underwater, transforms creatures into diseased thralls.</span>
+          </div>
+          <div class="card-bottom-stats">
+            <span class="card-stat-ac" id="cardAc">AC 17</span>
+            <span class="card-stat-hp" id="cardHp">HP 135</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spotlight Meta & Lore -->
+      <div class="spotlight-info">
+        <div class="spotlight-tag">
+          <span>&#9670;</span> Featured Monster Card
+        </div>
+        <h2 class="spotlight-title" id="spotlightTitle">Aboleth</h2>
+        <div class="spotlight-submeta" id="spotlightSubmeta">Large aberration, lawful evil &bull; Challenge 10 (5,900 XP)</div>
+        <p class="spotlight-lore" id="spotlightLore">
+          Before the coming of the gods, aboleths lurked in primordial oceans. They shaped early lifeforms and retain memories extending unbroken across millennia.
+        </p>
+        <div class="spotlight-actions">
+          <button class="btn-focus-wiki" id="btnScrollToWiki">Inspect Stat Block &darr;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search & Filter Controls -->
+  <div class="toolbar-container">
+    <div class="search-panel">
+      <div class="search-bar-row">
+        <div class="search-input-wrapper">
+          <input 
+            type="search" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="Search monsters by name, type, senses, languages, or traits..."
+            autocomplete="off"
+          >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </div>
+
+        <button class="btn-search" id="btnFilter">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Search
+        </button>
+
+        <button class="btn-adv-filter" id="btnAdvToggle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          Filters
+        </button>
+
+        <button class="btn-reset" id="btnReset">Reset</button>
+      </div>
+
+      <!-- Advanced Filter Drawer -->
+      <div class="advanced-filter-drawer" id="advDrawer">
+        <div class="filter-group">
+          <label>Min CR</label>
+          <select class="filter-select" id="filterCrMin">
+            <option value="0">CR 0</option>
+            <option value="1">CR 1</option>
+            <option value="5">CR 5</option>
+            <option value="10">CR 10</option>
+            <option value="15">CR 15</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Max CR</label>
+          <select class="filter-select" id="filterCrMax">
+            <option value="30" selected>CR 30</option>
+            <option value="20">CR 20</option>
+            <option value="15">CR 15</option>
+            <option value="10">CR 10</option>
+            <option value="5">CR 5</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Size</label>
+          <select class="filter-select" id="filterSize">
+            <option value="all">All Sizes</option>
+            <option value="Tiny">Tiny</option>
+            <option value="Small">Small</option>
+            <option value="Medium">Medium</option>
+            <option value="Large">Large</option>
+            <option value="Huge">Huge</option>
+            <option value="Gargantuan">Gargantuan</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Alignment</label>
+          <select class="filter-select" id="filterAlignment">
+            <option value="all">Any Alignment</option>
+            <option value="good">Good</option>
+            <option value="neutral">Neutral</option>
+            <option value="evil">Evil</option>
+            <option value="unaligned">Unaligned</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Workspace: Table & Wiki Stat Block -->
+  <main class="main-workspace" id="mainWorkspace">
+    <!-- Table -->
+    <section class="table-container">
+      <div class="table-toolbar">
+        <span class="results-count">Showing <strong id="monsterCount">0</strong> monsters in compendium</span>
+        <span id="statusMsg" role="status" style="font-size: 0.76rem; color: #94A3B8;"></span>
+      </div>
+
+      <div class="table-wrapper">
+        <table id="monsterTable">
+          <thead>
+            <tr>
+              <th style="width: 44px;">Icon</th>
+              <th data-sort="challenge_rating">CR <span class="sort-icon">&#8597;</span></th>
+              <th data-sort="name">Name <span class="sort-icon">&#8597;</span></th>
+              <th data-sort="type">Type <span class="sort-icon">&#8597;</span></th>
+              <th data-sort="size">Size <span class="sort-icon">&#8597;</span></th>
+              <th data-sort="ac">AC <span class="sort-icon">&#8597;</span></th>
+              <th data-sort="hit_points">HP <span class="sort-icon">&#8597;</span></th>
+              <th data-sort="alignment">Alignment <span class="sort-icon">&#8597;</span></th>
+              <th>Speed</th>
+              <th style="text-align: center; width: 48px;">Card</th>
+            </tr>
+          </thead>
+          <tbody id="monsterTableBody">
+            <!-- Injected by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginação client-side: o dataset inteiro (334 monstros) já está
+           carregado no navegador, então paginar é só fatiar currentList
+           (ver renderTable()) — sem round-trip nenhum ao backend. -->
+      <div class="pagination-bar" id="paginationBar">
+        <button type="button" class="btn-page" id="btnPrevPage">&larr; Anterior</button>
+        <span class="pagination-status" id="paginationStatus">Página 1 de 1</span>
+        <button type="button" class="btn-page" id="btnNextPage">Próxima &rarr;</button>
+      </div>
+    </section>
+
+    <!-- Wiki Stat Block (Schema Compliant) -->
+    <aside class="wiki-container" id="wikiSection">
+      <div class="wiki-header">
+        <div class="wiki-meta-top">
+          <span class="badge-type" id="wikiTypeBadge">Aberration</span>
+          <span class="badge-cr" id="wikiCrBadge">CR 10 (5,900 XP)</span>
+        </div>
+        <h2 class="wiki-monster-name" id="wikiName">Aboleth</h2>
+        <div class="wiki-submeta" id="wikiSubmeta">Large aberration, lawful evil</div>
+      </div>
+
+      <div class="wiki-body">
+        <div class="stat-vital-row">
+          <span><strong>Armor Class:</strong> <span class="stat-ac" id="wikiAc">17 (natural)</span></span>
+          <span><strong>Hit Points:</strong> <span class="stat-hp" id="wikiHp">135 (18d10 + 36)</span></span>
+          <span><strong>Speed:</strong> <span id="wikiSpeed">10 ft., swim 40 ft.</span></span>
+        </div>
+
+        <hr class="tapered-rule">
+
+        <!-- 6 Core Attributes directly from MonsterSchema -->
+        <div class="abilities-box">
+          <div class="ability-col">
+            <span class="ability-label">STR</span>
+            <span class="ability-val" id="wikiStr">21</span>
+            <span class="ability-modifier" id="wikiStrMod">(+5)</span>
+          </div>
+          <div class="ability-col">
+            <span class="ability-label">DEX</span>
+            <span class="ability-val" id="wikiDex">9</span>
+            <span class="ability-modifier" id="wikiDexMod">(-1)</span>
+          </div>
+          <div class="ability-col">
+            <span class="ability-label">CON</span>
+            <span class="ability-val" id="wikiCon">15</span>
+            <span class="ability-modifier" id="wikiConMod">(+2)</span>
+          </div>
+          <div class="ability-col">
+            <span class="ability-label">INT</span>
+            <span class="ability-val" id="wikiInt">18</span>
+            <span class="ability-modifier" id="wikiIntMod">(+4)</span>
+          </div>
+          <div class="ability-col">
+            <span class="ability-label">WIS</span>
+            <span class="ability-val" id="wikiWis">15</span>
+            <span class="ability-modifier" id="wikiWisMod">(+2)</span>
+          </div>
+          <div class="ability-col">
+            <span class="ability-label">CHA</span>
+            <span class="ability-val" id="wikiCha">18</span>
+            <span class="ability-modifier" id="wikiChaMod">(+4)</span>
+          </div>
+        </div>
+
+        <hr class="tapered-rule">
+
+        <!-- Proficiencies, Immunities, Senses, Languages -->
+        <div class="stat-vital-row">
+          <div><strong>Saving Throws:</strong> <span id="wikiSaves">CON +6, INT +8, WIS +6</span></div>
+          <div><strong>Skills:</strong> <span id="wikiSkills">History +12, Perception +10</span></div>
+          <div id="wikiDamageResistancesRow" style="display:none;"><strong>Damage Resistances:</strong> <span id="wikiDamageResistances">--</span></div>
+          <div id="wikiDamageImmunitiesRow" style="display:none;"><strong>Damage Immunities:</strong> <span id="wikiDamageImmunities">--</span></div>
+          <div id="wikiConditionImmunitiesRow" style="display:none;"><strong>Condition Immunities:</strong> <span id="wikiConditionImmunities">--</span></div>
+          <div><strong>Senses:</strong> <span id="wikiSenses">darkvision 120 ft., passive Perception 20</span></div>
+          <div><strong>Languages:</strong> <span id="wikiLanguages">Deep Speech, telepathy 120 ft.</span></div>
+          <div><strong>Proficiency Bonus:</strong> <span id="wikiProfBonus" style="color:var(--c-yellow); font-family:var(--font-mono);">+4</span></div>
+        </div>
+
+        <hr class="tapered-rule">
+
+        <!-- special_abilities -->
+        <div id="wikiTraitsSection">
+          <h3 class="statblock-heading">Special Abilities</h3>
+          <div id="wikiTraits" style="display:flex; flex-direction:column; gap:0.6rem; margin-top:0.4rem;">
+            <!-- Trait list -->
+          </div>
+        </div>
+
+        <!-- actions -->
+        <div id="wikiActionsSection">
+          <h3 class="statblock-heading">Actions</h3>
+          <div id="wikiActions" style="display:flex; flex-direction:column; gap:0.6rem; margin-top:0.4rem;">
+            <!-- Actions list -->
+          </div>
+        </div>
+
+        <!-- legendary_actions -->
+        <div id="wikiLegendarySection" style="display:none;">
+          <h3 class="statblock-heading">Legendary Actions</h3>
+          <p style="font-size:0.8rem; color:#CBD5E1; margin-bottom:0.4rem;">Can take 3 legendary actions, choosing from options below.</p>
+          <div id="wikiLegendaryActions" style="display:flex; flex-direction:column; gap:0.6rem;">
+            <!-- Legendary actions list -->
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script type="module" src="monster-index.js"></script>
+</body>
+</html>

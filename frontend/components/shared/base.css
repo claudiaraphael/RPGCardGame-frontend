@@ -1,0 +1,243 @@
+/* ==========================================================
+   BASE: reset, fundo, header/nav/auth-bar compartilhados, orbs
+   ==========================================================
+   Extraído do <style> que se repetia (quase idêntico) em suporte.html e
+   monster-index.html. Depende de tokens.css já importado antes deste
+   arquivo. Toda página com o header padrão (brand + nav-links + auth-bar)
+   usa este arquivo — ver components/shared/session.js pra lógica de login/logout
+   que preenche #authBar. */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-canvas);
+  background-image:
+    radial-gradient(circle at 50% 12%, rgba(13, 25, 244, 0.95) 0%, transparent 70%),
+    linear-gradient(180deg, #060B68 0%, #0D19F4 35%, #081088 75%, #040845 100%);
+  background-attachment: fixed;
+  color: #FFF;
+  font-family: var(--font-body);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Chamas ambiente flutuantes (decoração, mesma em toda página) */
+.pixel-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.75;
+  animation: floatSlow 8s ease-in-out infinite alternate;
+}
+
+.orb-1 {
+  top: 60px;
+  left: 5%;
+  width: 52px;
+  height: 52px;
+  background: radial-gradient(circle, var(--c-yellow) 20%, var(--c-orange) 50%, var(--c-red) 85%);
+  box-shadow: 0 0 20px var(--c-orange-glow);
+}
+.orb-2 {
+  top: 130px;
+  right: 6%;
+  width: 68px;
+  height: 68px;
+  background: radial-gradient(circle, var(--c-yellow) 25%, var(--c-orange) 55%, var(--c-red) 90%);
+  box-shadow: 0 0 25px var(--c-red-glow);
+  animation-duration: 10s;
+}
+.orb-3 {
+  top: 500px;
+  left: 3%;
+  width: 44px;
+  height: 44px;
+  background: radial-gradient(circle, var(--c-yellow) 15%, var(--c-orange) 60%, var(--c-red) 90%);
+  animation-duration: 7s;
+}
+.orb-4 {
+  top: 800px;
+  right: 4%;
+  width: 58px;
+  height: 58px;
+  background: radial-gradient(circle, var(--c-yellow) 20%, var(--c-orange) 50%, var(--c-red) 85%);
+  box-shadow: 0 0 22px var(--c-orange-glow);
+  animation-duration: 9s;
+}
+
+@keyframes floatSlow {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-24px) rotate(8deg); }
+}
+
+/* Header fixo compartilhado */
+header {
+  background: rgba(6, 11, 104, 0.94);
+  backdrop-filter: blur(14px);
+  border-bottom: 2px solid var(--c-red);
+  padding: 0.85rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
+}
+
+.header-content {
+  max-width: 1700px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  text-decoration: none;
+}
+
+.brand-emblem {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--c-red), var(--c-orange));
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 16px var(--c-red-glow), inset 0 0 10px var(--c-yellow);
+  border: 2px solid var(--c-yellow);
+  color: var(--c-yellow);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.3rem;
+}
+
+.brand-title h1 {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--c-yellow);
+  text-transform: uppercase;
+  text-shadow: 0 0 16px rgba(255, 214, 152, 0.4);
+}
+
+.brand-title p {
+  font-size: 0.72rem;
+  color: var(--c-orange);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  list-style: none;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  color: #E2E8F0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--c-yellow);
+  text-shadow: 0 0 10px rgba(255, 214, 152, 0.4);
+}
+
+/* Barra de autenticação: preenchida em runtime por components/shared/session.js
+   (renderAuthBar) — aqui só o esqueleto visual dos dois estados possível. */
+.auth-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(14, 22, 77, 0.85);
+  border: 1px solid var(--border-panel);
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--c-orange), var(--c-red));
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: #FFF;
+  border: 1px solid var(--c-yellow);
+}
+
+.btn-auth-toggle {
+  background: transparent;
+  border: 1px solid var(--border-panel);
+  color: var(--c-yellow);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-auth-toggle:hover {
+  background: rgba(223, 95, 71, 0.2);
+}
+
+/* Estado bloqueado (deslogado), reutilizado em qualquer página que exija
+   login — ver components/suporte/suporte.html e index.html. */
+.gated-box {
+  background: var(--bg-panel);
+  border: 2px dashed var(--c-red);
+  border-radius: 16px;
+  text-align: center;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: #11141E;
+  border: 1px solid var(--c-yellow);
+  color: #FFF;
+  padding: 0.85rem 1.4rem;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  z-index: 300;
+  display: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+}

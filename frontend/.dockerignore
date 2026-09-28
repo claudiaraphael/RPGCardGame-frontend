@@ -1,0 +1,10 @@
+.git
+node_modules
+Dockerfile
+.dockerignore
+.vscode
+.claude
+documentacao
+to-do.md
+CLAUDE.md
+claude-arquitetura.md

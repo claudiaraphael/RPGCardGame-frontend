@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar — AuroraRPG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/tokens.css">
+    <link rel="stylesheet" href="../shared/base.css">
+    <link rel="stylesheet" href="../shared/components.css">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="pixel-orb orb-1"></div>
+    <div class="pixel-orb orb-2"></div>
+
+    <header>
+        <div class="header-content">
+            <a href="../../index.html" class="brand">
+                <div class="brand-emblem">A</div>
+                <div class="brand-title"><h1>AuroraRPG</h1></div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../../index.html">Início</a></li>
+                <li><a href="../bestiario/monster-index.html">Bestiário</a></li>
+                <li><a href="../suporte/suporte.html">Suporte</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="login-wrap">
+        <div class="page-hero-title">
+            <h2>Entrar</h2>
+        </div>
+
+        <section class="auth-panel panel-card">
+            <h2>Já tenho conta</h2>
+            <form id="form-login">
+                <div class="form-group">
+                    <label class="form-label" for="login-email">E-mail</label>
+                    <input type="email" id="login-email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="login-senha">Senha</label>
+                    <input type="password" id="login-senha" class="form-input" required>
+                </div>
+                <button type="submit" class="btn-primary">Entrar</button>
+            </form>
+        </section>
+
+        <section class="auth-panel panel-card">
+            <h2>Criar conta</h2>
+            <form id="form-registro">
+                <div class="form-group">
+                    <label class="form-label" for="registro-email">E-mail</label>
+                    <input type="email" id="registro-email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registro-username">Nome de usuário</label>
+                    <input type="text" id="registro-username" class="form-input" minlength="3" maxlength="30" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registro-senha">Senha (mín. 8 caracteres)</label>
+                    <input type="password" id="registro-senha" class="form-input" minlength="8" required>
+                </div>
+                <button type="submit" class="btn-primary">Criar conta e entrar</button>
+            </form>
+        </section>
+
+        <p id="mensagem-status" role="status"></p>
+        <p id="usuario-logado" class="panel-card" hidden>
+            Logado como <strong id="usuario-nome"></strong>.
+            <button type="button" class="btn-danger" id="btn-sair">Sair</button>
+        </p>
+    </main>
+
+    <script src="../shared/session.js"></script>
+    <script src="login.js"></script>
+</body>
+</html>

@@ -32,3 +32,10 @@ dist-ssr
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+
+# Docker: sem docker-compose no projeto (decisão explícita — duas imagens
+# independentes, backend e frontend). O Dockerfile/.dockerignore do
+# backend agora são versionados direto (requisito da disciplina: precisa
+# estar no git nos dois projetos), igual ao do frontend — não ignorar.
+backend/compose.yaml
+backend/docker-compose.yml
