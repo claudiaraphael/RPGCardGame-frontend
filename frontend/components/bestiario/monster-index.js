@@ -1,5 +1,5 @@
 // ==========================================================
-// PÁGINA: indexMonstros/monster-index.html (Bestiário)
+// PÁGINA: components/bestiario/monster-index.html (Bestiário)
 // ==========================================================
 // Extraído dos dois <script> inline do protótipo original (o clássico e o
 // `type="module"` que faz o fetch de verdade) e fundido num módulo só —

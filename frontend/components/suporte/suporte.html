@@ -7,10 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Lora:ital,wght@0,500;0,600;1,400&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/tokens.css">
-  <link rel="stylesheet" href="../styles/base.css">
-  <link rel="stylesheet" href="../styles/components.css">
-  <link rel="stylesheet" href="../styles/support.css">
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="../shared/components.css">
+  <link rel="stylesheet" href="support.css">
 </head>
 <body>
 
@@ -21,7 +21,7 @@
 
   <header>
     <div class="header-content">
-      <a href="../index.html" class="brand">
+      <a href="../../index.html" class="brand">
         <div class="brand-emblem">A</div>
         <div class="brand-title">
           <h1>AuroraRPG</h1>
@@ -29,14 +29,14 @@
       </a>
 
       <ul class="nav-links">
-        <li><a href="../index.html">Início</a></li>
-        <li><a href="../indexMonstros/monster-index.html">Bestiário</a></li>
-        <li><a href="../index.html#charactersSection">Personagens</a></li>
+        <li><a href="../../index.html">Início</a></li>
+        <li><a href="../bestiario/monster-index.html">Bestiário</a></li>
+        <li><a href="../../index.html#charactersSection">Personagens</a></li>
         <li><a href="suporte.html" class="active">Suporte</a></li>
       </ul>
 
-      <!-- Preenchido em runtime por scripts/session.js (renderizarAuthBar) -->
-      <div class="auth-bar" id="authBar" data-login-href="../login.html"></div>
+      <!-- Preenchido em runtime por ../shared/session.js (renderizarAuthBar) -->
+      <div class="auth-bar" id="authBar" data-login-href="../login/login.html"></div>
     </div>
   </header>
 
@@ -89,7 +89,7 @@
         </div>
 
         <div class="history-list" id="ticketHistoryList">
-          <!-- Preenchido por scripts/support.js -->
+          <!-- Preenchido por support.js -->
         </div>
       </aside>
     </div>
@@ -109,7 +109,7 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="../scripts/session.js"></script>
-  <script src="../scripts/support.js"></script>
+  <script src="../shared/session.js"></script>
+  <script src="support.js"></script>
 </body>
 </html>

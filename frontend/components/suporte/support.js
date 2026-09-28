@@ -1,10 +1,10 @@
 // ==========================================================
-// PÁGINA: suporte/suporte.html (Central de Suporte Arcano)
+// PÁGINA: components/suporte/suporte.html (Central de Suporte Arcano)
 // ==========================================================
 // Extraído do <script> inline do protótipo, que usava um array mockado
 // (tickets fake) e chamava POST /support (rota que não existe). Agora
 // chama de verdade POST /tickets e GET /tickets/me — precisa de
-// scripts/session.js carregado antes deste arquivo (usa obterToken(),
+// components/shared/session.js carregado antes deste arquivo (usa obterToken(),
 // estaLogado()).
 
 let currentCategory = "bugs";

@@ -1,7 +1,7 @@
 // ==========================================================
 // PÁGINA: login.html
 // ==========================================================
-// Usa as funções de scripts/session.js (login/registrar/salvarSessao) em
+// Usa as funções de components/shared/session.js (login/registrar/salvarSessao) em
 // vez de duplicar localStorage na mão — precisa de session.js carregado
 // antes deste arquivo.
 

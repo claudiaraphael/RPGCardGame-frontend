@@ -6,7 +6,7 @@
 // porque o header compartilhado (auth-bar) precisa saber quem está logado
 // em qualquer página, não só na que fez o login.
 //
-// Carregado como <script src="../scripts/session.js"></script> (script
+// Carregado como <script src="components/shared/session.js"></script> (script
 // clássico, não module) antes do script específico de cada página.
 
 const API_BASE_URL = "http://localhost:3000";
@@ -116,10 +116,12 @@ function renderizarAuthBar() {
     const linkEntrar = document.createElement("a");
     linkEntrar.className = "btn-auth-toggle";
     linkEntrar.textContent = "Entrar";
-    // Caminho relativo: páginas na raiz de frontend/ usam "login.html",
-    // as de subpasta (suporte/, indexMonstros/) precisam de "../login.html"
-    // — resolvido via data-attribute no próprio #authBar (ver HTML de cada
-    // página), com "login.html" como padrão.
+    // Caminho relativo pro login muda conforme a profundidade da página
+    // (index.html na raiz usa "components/login/login.html", suporte.html
+    // usa "../login/login.html" etc.) — por isso vem de um data-attribute
+    // no próprio #authBar (ver HTML de cada página), não de um valor fixo
+    // aqui. O fallback abaixo só cobre uma página futura que esqueça de
+    // declarar o attribute.
     linkEntrar.href = container.dataset.loginHref || "login.html";
 
     container.appendChild(linkEntrar);

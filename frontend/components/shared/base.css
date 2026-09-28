@@ -4,7 +4,7 @@
    Extraído do <style> que se repetia (quase idêntico) em suporte.html e
    monster-index.html. Depende de tokens.css já importado antes deste
    arquivo. Toda página com o header padrão (brand + nav-links + auth-bar)
-   usa este arquivo — ver scripts/session.js pra lógica de login/logout
+   usa este arquivo — ver components/shared/session.js pra lógica de login/logout
    que preenche #authBar. */
 
 * {
@@ -163,7 +163,7 @@ header {
   text-shadow: 0 0 10px rgba(255, 214, 152, 0.4);
 }
 
-/* Barra de autenticação: preenchida em runtime por scripts/session.js
+/* Barra de autenticação: preenchida em runtime por components/shared/session.js
    (renderAuthBar) — aqui só o esqueleto visual dos dois estados possível. */
 .auth-bar {
   display: flex;
@@ -213,7 +213,7 @@ header {
 }
 
 /* Estado bloqueado (deslogado), reutilizado em qualquer página que exija
-   login — ver suporte/suporte.html e index.html. */
+   login — ver components/suporte/suporte.html e index.html. */
 .gated-box {
   background: var(--bg-panel);
   border: 2px dashed var(--c-red);

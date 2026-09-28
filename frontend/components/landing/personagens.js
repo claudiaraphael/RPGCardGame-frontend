@@ -3,7 +3,7 @@
 // ==========================================================
 // Campos são os placeholders reais do backend (nome/raca/classe/nivel/hp/mp)
 // — não o modelo D&D completo do mockup (alinhamento/AC/atributos), que
-// ainda não existe no schema (ver CLAUDE.md). Precisa de scripts/session.js
+// ainda não existe no schema (ver CLAUDE.md). Precisa de components/shared/session.js
 // carregado antes deste arquivo.
 
 const gatedBox = document.getElementById("gatedBox");

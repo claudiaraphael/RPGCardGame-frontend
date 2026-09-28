@@ -2,8 +2,9 @@
 # servidor de arquivos. nginx alpine é minúsculo e serve isso direto.
 #
 # COPY . (tudo), não uma lista de arquivo por arquivo: o front ganha
-# página nova com frequência (indexMonstros/, login.html, suporte/...)
-# e uma lista manual exigiria editar este Dockerfile a cada página nova.
+# página nova com frequência (components/landing/, components/login/,
+# components/suporte/...) e uma lista manual exigiria editar este
+# Dockerfile a cada página nova.
 # O que não deve ir pra imagem fica de fora via .dockerignore (notas
 # internas, ferramental local), não uma allowlist aqui.
 FROM nginx:alpine
