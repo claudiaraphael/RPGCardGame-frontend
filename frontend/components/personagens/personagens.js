@@ -1,10 +1,10 @@
 // ==========================================================
-// PÁGINA: index.html — CRUD de personagem (backend/personagem/)
+// PÁGINA: components/personagens/personagens.html — CRUD (backend/personagem/)
 // ==========================================================
 // Campos são os placeholders reais do backend (nome/raca/classe/nivel/hp/mp)
-// — não o modelo D&D completo do mockup (alinhamento/AC/atributos), que
-// ainda não existe no schema (ver CLAUDE.md). Precisa de components/shared/session.js
-// carregado antes deste arquivo.
+// — não o modelo D&D completo do mockup (alinhamento/AC/atributos/foto),
+// que ainda não existe no schema (ver CLAUDE.md). Precisa de
+// ../shared/session.js carregado antes deste arquivo.
 
 const gatedBox = document.getElementById("gatedBox");
 const charactersLayout = document.getElementById("charactersLayout");

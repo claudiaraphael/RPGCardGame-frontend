@@ -12,6 +12,9 @@ const usuarioLogadoEl = document.getElementById("usuario-logado");
 const usuarioNomeEl = document.getElementById("usuario-nome");
 const btnSair = document.getElementById("btn-sair");
 
+// Pra onde o login leva depois de autenticar — a página de personagens.
+const DESTINO_APOS_LOGIN = "../personagens/personagens.html";
+
 function mostrarSessaoAtual() {
   const usuario = obterUsuario();
 
@@ -33,9 +36,9 @@ formLogin.addEventListener("submit", async (evento) => {
       document.getElementById("login-email").value,
       document.getElementById("login-senha").value,
     );
-    mensagemStatus.textContent = "Login feito com sucesso.";
-    formLogin.reset();
-    mostrarSessaoAtual();
+    // Redireciona na hora — é o que resolve de verdade "apertei Entrar e
+    // não aconteceu nada": antes só trocava um texto na própria página.
+    window.location.href = DESTINO_APOS_LOGIN;
   } catch (erro) {
     console.error(erro);
     mensagemStatus.textContent = erro.message;
@@ -52,9 +55,7 @@ formRegistro.addEventListener("submit", async (evento) => {
       document.getElementById("registro-username").value,
       document.getElementById("registro-senha").value,
     );
-    mensagemStatus.textContent = "Conta criada e login feito com sucesso.";
-    formRegistro.reset();
-    mostrarSessaoAtual();
+    window.location.href = DESTINO_APOS_LOGIN;
   } catch (erro) {
     console.error(erro);
     mensagemStatus.textContent = erro.message;

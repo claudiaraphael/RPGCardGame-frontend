@@ -6,9 +6,12 @@ estrutura em `components/`.
 ## Feito
 
 - [x] Redesign visual "AuroraRPG" (paleta/tipografia unificadas)
-- [x] `index.html`: header padrão + hero + grade de personagens (CRUD
-      completo contra `/personagens`)
-- [x] `components/login/login.html` reskinado, sessão compartilhada
+- [x] `index.html`: header padrão + hero (só Início — a gestão de
+      personagens virou página própria)
+- [x] `components/personagens/personagens.html`: grade de personagens
+      (CRUD completo contra `/personagens`), separada do `index.html`
+- [x] `components/login/login.html` reskinado, sessão compartilhada,
+      redireciona pra `personagens.html` depois de logar
 - [x] `components/suporte/suporte.html` ligado de verdade a `/tickets`
       (4 tipos + prioridade — backend estendido)
 - [x] `components/bestiario/monster-index.html`: paginação, chips de tipo
@@ -36,8 +39,8 @@ estrutura em `components/`.
 ## Depois
 
 - [ ] Modelo real de personagem (raça/classe/atributos D&D, alinhamento,
-      AC) — hoje `index.html` usa só os placeholders do backend
-      (nome/raca/classe/nivel/hp/mp)
+      AC, retrato/foto) — hoje `personagens.html` usa só os placeholders
+      do backend (nome/raca/classe/nivel/hp/mp)
 - [ ] Geração/visualização de cartas (depende da modelagem em
       `auth/User.ts` e `Systems/`, trabalho da autora)
 - [ ] Documentação interativa/vídeo de entrega

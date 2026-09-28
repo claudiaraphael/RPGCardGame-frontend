@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personagens — AuroraRPG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/tokens.css">
+    <link rel="stylesheet" href="../shared/base.css">
+    <link rel="stylesheet" href="../shared/components.css">
+    <link rel="stylesheet" href="personagens.css">
+</head>
+<body>
+    <div class="pixel-orb orb-1"></div>
+    <div class="pixel-orb orb-2"></div>
+    <div class="pixel-orb orb-3"></div>
+    <div class="pixel-orb orb-4"></div>
+
+    <header>
+        <div class="header-content">
+            <a href="../../index.html" class="brand">
+                <div class="brand-emblem">A</div>
+                <div class="brand-title"><h1>AuroraRPG</h1></div>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="../../index.html">Início</a></li>
+                <li><a href="../bestiario/monster-index.html">Bestiário</a></li>
+                <li><a href="personagens.html" class="active">Personagens</a></li>
+                <li><a href="../suporte/suporte.html">Suporte</a></li>
+            </ul>
+
+            <!-- Preenchido em runtime por ../shared/session.js -->
+            <div class="auth-bar" id="authBar" data-login-href="../login/login.html"></div>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-hero-title">
+            <h2>Seus Personagens</h2>
+            <p>Crie, edite e gerencie seus aventureiros.</p>
+        </div>
+
+        <!-- Bloqueado se deslogado (ver personagens.js) -->
+        <div class="gated-box" id="gatedBox" style="display: none;">
+            <h3 style="font-family: var(--font-display); font-size: 1.8rem; color: var(--c-yellow);">
+                Entre para ver seus personagens
+            </h3>
+            <p style="color: #CBD5E1; max-width: 480px;">
+                A gestão de personagens é exclusiva de jogadores autenticados.
+            </p>
+            <a class="btn-primary" href="../login/login.html">Ir para o Login</a>
+        </div>
+
+        <div id="charactersLayout" style="display:none; flex-direction: column; gap: 1.25rem;">
+            <div class="character-grid" id="characterGrid">
+                <!-- Preenchido por personagens.js -->
+            </div>
+
+            <!-- Form de criar/editar — toggle simples (hidden), sem
+                 <dialog>/modal de verdade: mais simples de manter aqui,
+                 sem framework nenhum. -->
+            <section id="form-personagem-wrap" class="panel-card" hidden>
+                <h3 id="form-personagem-titulo" style="font-family: var(--font-display); color: var(--c-yellow);">Criar personagem</h3>
+                <p style="color:#94A3B8; font-size:0.82rem;">
+                    Campos provisórios — o modelo real de personagem (raça/classe/atributos D&amp;D, retrato) ainda está em construção (ver backend/personagem/).
+                </p>
+
+                <form id="form-personagem">
+                    <div class="form-group full-width">
+                        <label class="form-label" for="personagem-nome">Nome</label>
+                        <input type="text" id="personagem-nome" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="personagem-raca">Raça</label>
+                        <input type="text" id="personagem-raca" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="personagem-classe">Classe</label>
+                        <input type="text" id="personagem-classe" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="personagem-nivel">Nível</label>
+                        <input type="number" id="personagem-nivel" class="form-input" min="1" max="20" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="personagem-hp">HP</label>
+                        <input type="number" id="personagem-hp" class="form-input" min="1" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="personagem-mp">MP</label>
+                        <input type="number" id="personagem-mp" class="form-input" min="0" value="0">
+                    </div>
+                    <div class="form-group full-width" style="display:flex; gap:0.75rem;">
+                        <button type="submit" class="btn-primary">Salvar</button>
+                        <button type="button" class="btn-danger" id="btn-cancelar-personagem">Cancelar</button>
+                    </div>
+                </form>
+            </section>
+
+            <p id="personagem-status" role="status"></p>
+        </div>
+    </main>
+
+    <script src="../shared/session.js"></script>
+    <script src="personagens.js"></script>
+</body>
+</html>

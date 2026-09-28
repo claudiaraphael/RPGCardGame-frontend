@@ -212,6 +212,18 @@ só.
   container; se não for, é processo local — no Windows,
   `Get-NetTCPConnection -LocalPort <porta>` (PowerShell) mostra o
   `OwningProcess` pra encerrar.
+  - **Pegadinha real**: se um `docker run -p` anterior falhou no meio
+    (ex: por causa desse mesmo erro de porta), ele pode deixar pra trás
+    um container "fantasma" no estado `Created` (nunca chegou a rodar).
+    Esse container sozinho já reserva a porta declarada no `-p`, mesmo
+    parado — e como `docker ps` só mostra container **rodando**, ele fica
+    invisível ali, e `Get-NetTCPConnection` também não acha nada do lado
+    do Windows (a reserva é interna do Docker). Sintoma: toda tentativa
+    de `docker run` com aquele nome/porta falha do mesmo jeito, mesmo
+    depois de confirmar que nada mais usa a porta. Diagnóstico:
+    `docker ps -a` (com `-a`, mostra os parados/criados também) — se
+    aparecer um container com o mesmo nome em `Created` ou `Exited`,
+    remove com `docker rm -f <nome>` antes de tentar de novo.
 - **Container sobe e morre na hora (`docker ps -a` mostra `Exited`)**:
   ver `docker logs <nome>` — no backend, geralmente é `.env` faltando uma
   variável (`JWT_SECRET`/`DND_BASE_URL`) ou o `--env-file` esquecido no

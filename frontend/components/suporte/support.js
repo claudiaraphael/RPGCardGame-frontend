@@ -7,7 +7,10 @@
 // components/shared/session.js carregado antes deste arquivo (usa obterToken(),
 // estaLogado()).
 
-let currentCategory = "bugs";
+// "bug" (singular) — tem que bater com o data-cat da aba que já vem
+// "active" no HTML e com o enum do backend (ticketSchema.ts). Já foi
+// "bugs" aqui, o que rejeitava (400) todo envio sem trocar de aba antes.
+let currentCategory = "bug";
 let currentPriority = "media";
 
 const ROTULOS_STATUS = {

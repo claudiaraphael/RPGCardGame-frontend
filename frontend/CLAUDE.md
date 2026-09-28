@@ -29,13 +29,16 @@ frontend/
 │   │   ├── base.css               # reset, fundo com orbs, header/nav/auth-bar
 │   │   ├── components.css         # botões, inputs, pills, badges, cards
 │   │   └── session.js             # token/usuário (localStorage), widget de auth do header
-│   ├── landing/                 # só CSS/JS — o HTML é o index.html da raiz
-│   │   ├── landing.css
-│   │   └── personagens.js         # CRUD contra /personagens
+│   ├── landing/                 # só CSS — o HTML é o index.html da raiz
+│   │   └── landing.css            # só o hero banner
 │   ├── login/
 │   │   ├── login.html
 │   │   ├── login.css
 │   │   └── login.js
+│   ├── personagens/
+│   │   ├── personagens.html       # grade de personagens + form criar/editar
+│   │   ├── personagens.css
+│   │   └── personagens.js         # CRUD contra /personagens
 │   ├── suporte/
 │   │   ├── suporte.html           # Central de Suporte Arcano
 │   │   ├── support.css
@@ -57,16 +60,21 @@ mesma ordem em toda página. Ver detalhe de cada uma em "Páginas" abaixo.
 
 ## Páginas
 
-- **`index.html`** (Início + Personagens): header padrão, hero "AuroraRPG:
-  Chega em Breve!", grade de cards de personagem (CRUD completo — criar,
-  editar, excluir — contra `/personagens`). Campos são os placeholders
-  reais do backend (nome/raca/classe/nivel/hp/mp), **não** o modelo D&D
-  completo do plano de redesign (alinhamento/AC/atributos) — decisão
-  explícita da autora pra não mexer em `backend/personagem/` por enquanto.
-  Bloqueado (`gated-box`) se deslogado, com link pra `components/login/login.html`.
+- **`index.html`** (Início): header padrão + hero "AuroraRPG: Chega em
+  Breve!". Só isso — a gestão de personagens é página própria (abaixo).
 - **`components/login/login.html`**: formulário de entrar/criar conta,
   usando `components/shared/session.js` (login/registrar) em vez de
-  duplicar `localStorage` na mão.
+  duplicar `localStorage` na mão. Depois de logar/criar conta, redireciona
+  direto pra `components/personagens/personagens.html`
+  (`DESTINO_APOS_LOGIN` em `login.js`).
+- **`components/personagens/personagens.html`**: grade de cards de
+  personagem (CRUD completo — criar, editar, excluir — contra
+  `/personagens`). Campos são os placeholders reais do backend
+  (nome/raca/classe/nivel/hp/mp), **não** o modelo D&D completo do plano
+  de redesign (alinhamento/AC/atributos/retrato) — decisão explícita da
+  autora pra não mexer em `backend/personagem/` por enquanto (o "retrato"
+  do card é só a inicial do nome). Bloqueado (`gated-box`) se deslogado,
+  com link pra `components/login/login.html`.
 - **`components/suporte/suporte.html`** (Central de Suporte Arcano): liga
   em `POST /tickets` e `GET /tickets/me` de verdade (antes era mock, array
   fake e `POST /support` que não existia). `backend/tickets/` ganhou um 4º
