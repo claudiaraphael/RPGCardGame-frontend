@@ -1,0 +1,35 @@
+/* ==========================================================
+   TOKENS: paleta oficial AuroraRPG + tipografia + superfícies
+   ==========================================================
+   Fonte: documentacao/landing_page_plan.md (seção 1) + o bloco :root que
+   já existia, quase idêntico, dentro do <style> de suporte.html e de
+   monster-index.html — este arquivo é a versão única, sem duplicar. Toda
+   página do front importa este arquivo primeiro (antes de base.css). */
+
+:root {
+  /* Paleta oficial (gradiente do Figma) */
+  --c-scion: #0D19F4;           /* Electric Scion Blue — canvas/foco */
+  --c-scion-glow: rgba(13, 25, 244, 0.6);
+  --c-scion-light: #3861FB;
+  --c-yellow: #FFD698;          /* Sunlight Gold — títulos, valores */
+  --c-yellow-dim: rgba(255, 214, 152, 0.15);
+  --c-orange: #DF5F47;          /* Flame Coral — botões primários, auras */
+  --c-orange-glow: rgba(223, 95, 71, 0.45);
+  --c-red: #BE1818;             /* Deep Crimson — avisos, HP, cabeçalhos */
+  --c-red-glow: rgba(190, 24, 24, 0.55);
+
+  /* Superfícies */
+  --bg-canvas: #0A12C2;
+  --bg-midnight: #060B68;
+  --bg-card-surface: #0E164D;
+  --bg-panel: rgba(10, 16, 68, 0.92);
+  --border-panel: rgba(223, 95, 71, 0.42);
+  --border-blue: rgba(56, 97, 251, 0.45);
+
+  /* Tipografia */
+  --font-display: 'Cinzel', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-statblock: 'Lora', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-pixel: 'Press Start 2P', monospace;
+}

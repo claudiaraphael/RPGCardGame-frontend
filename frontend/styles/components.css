@@ -1,0 +1,206 @@
+/* ==========================================================
+   COMPONENTS: peças reaproveitadas entre páginas
+   ==========================================================
+   Botões, campos de formulário, pills, badges e cards que se repetem em
+   mais de uma página (extraídos de suporte.html/monster-index.html, que já
+   tinham praticamente os mesmos estilos escritos duas vezes). Depende de
+   tokens.css. */
+
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  width: 100%;
+  margin: 2rem auto 3rem auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.page-hero-title {
+  text-align: center;
+}
+
+.page-hero-title h2 {
+  font-family: var(--font-display);
+  font-size: 2.3rem;
+  font-weight: 900;
+  color: #FFF;
+  letter-spacing: 0.05em;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+}
+
+.page-hero-title p {
+  font-size: 0.95rem;
+  color: var(--c-yellow);
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+/* Formulários */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--c-yellow);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  background: rgba(14, 22, 77, 0.9);
+  border: 1px solid var(--border-blue);
+  color: #FFF;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  font-family: var(--font-body);
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  border-color: var(--c-scion-light);
+  box-shadow: 0 0 15px var(--c-scion-glow);
+}
+
+/* Botões */
+.btn-primary {
+  background: linear-gradient(135deg, var(--c-yellow), #FFB84D);
+  color: #0B0E20;
+  border: 1.5px solid var(--c-yellow);
+  padding: 0.95rem 1.8rem;
+  border-radius: 8px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: 0 6px 20px rgba(255, 214, 152, 0.35);
+  transition: all 0.25s ease;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 8px 25px rgba(255, 214, 152, 0.55);
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #FFF, var(--c-yellow));
+}
+
+.btn-danger {
+  background: transparent;
+  border: 1px solid var(--c-red);
+  color: #FF6666;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-danger:hover {
+  background: rgba(190, 24, 24, 0.25);
+}
+
+/* Pills (categorias, prioridade, tipos) */
+.pill-group {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.pill {
+  flex: 1;
+  min-width: 80px;
+  padding: 0.55rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid var(--border-blue);
+  background: rgba(14, 22, 77, 0.8);
+  color: #CBD5E1;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.pill.active[data-val="baixa"] {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #10B981;
+  color: #34D399;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+.pill.active[data-val="media"] {
+  background: rgba(255, 214, 152, 0.25);
+  border-color: var(--c-yellow);
+  color: var(--c-yellow);
+  box-shadow: 0 0 12px rgba(255, 214, 152, 0.3);
+}
+.pill.active[data-val="alta"] {
+  background: rgba(223, 95, 71, 0.3);
+  border-color: var(--c-orange);
+  color: var(--c-orange);
+  box-shadow: 0 0 12px var(--c-orange-glow);
+}
+.pill.active[data-val="critica"] {
+  background: rgba(190, 24, 24, 0.35);
+  border-color: var(--c-red);
+  color: #FF5555;
+  box-shadow: 0 0 15px var(--c-red-glow);
+}
+
+/* Badges de status */
+.badge-status {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+
+.status-open,
+.status-review {
+  background: rgba(223, 95, 71, 0.25);
+  border: 1px solid var(--c-orange);
+  color: var(--c-orange);
+}
+
+.status-in_progress {
+  background: rgba(255, 214, 152, 0.2);
+  border: 1px solid var(--c-yellow);
+  color: var(--c-yellow);
+}
+
+.status-resolved,
+.status-closed {
+  background: rgba(0, 210, 255, 0.2);
+  border: 1px solid var(--c-scion-light);
+  color: var(--c-scion-light);
+}
+
+/* Card genérico (painel translúcido com borda) */
+.panel-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-panel);
+  border-radius: 16px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+}
