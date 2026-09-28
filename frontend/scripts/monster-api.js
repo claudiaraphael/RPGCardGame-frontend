@@ -153,14 +153,19 @@ export class MonsterApiClient {
   }
 
   /**
-   * Prefetches details for multiple monsters in parallel (in chunks to avoid socket exhaustion)
-   * @param {string[]} indices 
-   * @param {number} [batchSize=8] 
+   * Prefetches details for multiple monsters in parallel (in chunks to avoid socket exhaustion).
+   * Falhas de rede pontuais (timeout, rate limit) são tentadas de novo uma vez antes de
+   * desistir de um índice — sem isso, Promise.allSettled descartava a falha em silêncio e
+   * o monstro simplesmente sumia da lista (era a causa de categorias como "dragon" às
+   * vezes aparecerem incompletas sem nenhum aviso).
+   * @param {string[]} indices
+   * @param {number} [batchSize=8]
    * @param {function} [onProgress] - (loadedCount, total) => void
-   * @returns {Promise<Object[]>}
+   * @returns {Promise<{ results: Object[], failed: string[] }>}
    */
   async prefetchBatch(indices, batchSize = 6, onProgress = null) {
     const results = [];
+    let falharam = [];
     let loaded = 0;
 
     for (let i = 0; i < indices.length; i += batchSize) {
@@ -169,9 +174,11 @@ export class MonsterApiClient {
         chunk.map(idx => this.getMonsterByIndex(idx))
       );
 
-      chunkResults.forEach(r => {
+      chunkResults.forEach((r, j) => {
         if (r.status === 'fulfilled' && r.value) {
           results.push(r.value);
+        } else {
+          falharam.push(chunk[j]);
         }
       });
 
@@ -181,7 +188,24 @@ export class MonsterApiClient {
       }
     }
 
-    return results;
+    // Segunda tentativa, só pros que falharam na primeira passada.
+    if (falharam.length > 0) {
+      const retryResults = await Promise.allSettled(
+        falharam.map(idx => this.getMonsterByIndex(idx))
+      );
+
+      const aindaFalhando = [];
+      retryResults.forEach((r, j) => {
+        if (r.status === 'fulfilled' && r.value) {
+          results.push(r.value);
+        } else {
+          aindaFalhando.push(falharam[j]);
+        }
+      });
+      falharam = aindaFalhando;
+    }
+
+    return { results, failed: falharam };
   }
 
   /**

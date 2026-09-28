@@ -1,0 +1,45 @@
+/* ==========================================================
+   PÁGINA: login.html
+   ==========================================================
+   Depende de tokens.css, base.css e components.css. */
+
+.login-wrap {
+  max-width: 420px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.login-wrap .page-hero-title p {
+  color: #CBD5E1;
+  font-style: normal;
+}
+
+.auth-panel {
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-panel h2 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--c-yellow);
+}
+
+.auth-panel form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+#usuario-logado {
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
