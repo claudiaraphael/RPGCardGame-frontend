@@ -26,3 +26,52 @@
   color: #FFF;
   text-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
+
+/* Só funcional por enquanto (navegação básica) — layout definitivo entra
+   depois que as referências em frontend/designs/ estiverem escolhidas. */
+.hero-actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem auto 0 auto;
+}
+
+.hero-nav-cards {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 2rem auto 3rem auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.hero-nav-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-panel);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.hero-nav-card:hover {
+  border-color: var(--c-yellow);
+  transform: translateY(-2px);
+}
+
+.hero-nav-card h3 {
+  font-family: var(--font-display);
+  color: var(--c-yellow);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.hero-nav-card p {
+  font-size: 0.88rem;
+  color: #CBD5E1;
+  line-height: 1.5;
+}

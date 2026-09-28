@@ -615,8 +615,6 @@ tbody td { padding: 0.85rem 1rem; color: #F1F5F9; vertical-align: middle; }
 
 tbody tr:hover .monster-name-link { color: var(--c-yellow); }
 
-.source-tag { font-size: 0.7rem; color: var(--c-orange); font-style: italic; }
-
 .badge-cr {
   background: rgba(223, 95, 71, 0.2);
   color: var(--c-orange);

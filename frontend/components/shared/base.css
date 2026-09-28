@@ -216,7 +216,7 @@ header {
    login — ver components/suporte/suporte.html e index.html. */
 .gated-box {
   background: var(--bg-panel);
-  border: 2px dashed var(--c-red);
+  border: 1px solid var(--border-panel);
   border-radius: 16px;
   text-align: center;
   padding: 4rem 2rem;

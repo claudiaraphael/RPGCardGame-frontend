@@ -144,15 +144,10 @@ function renderTable() {
 
     const nameBox = document.createElement("div");
     nameBox.className = "cell-name-box";
-    const nameInner = document.createElement("div");
     const nameLink = document.createElement("div");
     nameLink.className = "monster-name-link";
     nameLink.textContent = m.name;
-    const sourceTag = document.createElement("div");
-    sourceTag.className = "source-tag";
-    sourceTag.textContent = m.url;
-    nameInner.append(nameLink, sourceTag);
-    nameBox.appendChild(nameInner);
+    nameBox.appendChild(nameLink);
 
     const btnExpand = document.createElement("button");
     btnExpand.className = "btn-statblock-expand";

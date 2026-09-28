@@ -8,23 +8,19 @@
 const formLogin = document.getElementById("form-login");
 const formRegistro = document.getElementById("form-registro");
 const mensagemStatus = document.getElementById("mensagem-status");
-const usuarioLogadoEl = document.getElementById("usuario-logado");
-const usuarioNomeEl = document.getElementById("usuario-nome");
-const btnSair = document.getElementById("btn-sair");
 
-// Pra onde o login leva depois de autenticar — a página de personagens.
-const DESTINO_APOS_LOGIN = "../personagens/personagens.html";
+// Pra onde o login leva depois de autenticar — página de criação de
+// personagem (placeholder por enquanto, ver criacaoPersonagens.html).
+const DESTINO_APOS_LOGIN = "../personagens/criacaoPersonagens.html";
 
+// Quem já está logado e cai em login.html de novo (ex: voltou pelo
+// histórico do navegador) é mandado direto pro destino, em vez de ver
+// o formulário — antes ficava só um aviso "Logado como" no rodapé da
+// página, fácil de não notar.
 function mostrarSessaoAtual() {
-  const usuario = obterUsuario();
-
-  if (!usuario) {
-    usuarioLogadoEl.hidden = true;
-    return;
+  if (estaLogado()) {
+    window.location.href = DESTINO_APOS_LOGIN;
   }
-
-  usuarioNomeEl.textContent = usuario.username ?? usuario.email;
-  usuarioLogadoEl.hidden = false;
 }
 
 formLogin.addEventListener("submit", async (evento) => {
@@ -60,12 +56,6 @@ formRegistro.addEventListener("submit", async (evento) => {
     console.error(erro);
     mensagemStatus.textContent = erro.message;
   }
-});
-
-btnSair.addEventListener("click", () => {
-  limparSessao();
-  mensagemStatus.textContent = "Você saiu.";
-  mostrarSessaoAtual();
 });
 
 mostrarSessaoAtual();

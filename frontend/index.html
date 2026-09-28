@@ -41,8 +41,41 @@
         <div class="hero-banner">
             <h2>AuroraRPG: Chega em Breve!</h2>
         </div>
+
+        <div class="hero-actions" id="heroActions"></div>
+
+        <div class="hero-nav-cards">
+            <a class="hero-nav-card" href="components/bestiario/monster-index.html">
+                <h3>Bestiário</h3>
+                <p>Consulte as criaturas do D&amp;D 5e, com filtros e statblock completo.</p>
+            </a>
+            <a class="hero-nav-card" href="components/personagens/personagens.html">
+                <h3>Personagens</h3>
+                <p>Crie e gerencie os aventureiros da sua conta.</p>
+            </a>
+            <a class="hero-nav-card" href="components/suporte/suporte.html">
+                <h3>Suporte</h3>
+                <p>Envie pedidos, sugestões ou relate problemas.</p>
+            </a>
+        </div>
     </main>
 
     <script src="components/shared/session.js"></script>
+    <script>
+        // Botão de entrada muda conforme sessão — evita mandar quem já
+        // está logado de volta pro login. Fica aqui (não em landing.css/js
+        // separado) porque é só essas 4 linhas; se crescer, vira arquivo.
+        const heroActions = document.getElementById("heroActions");
+        const acao = document.createElement("a");
+        acao.className = "btn-primary";
+        if (estaLogado()) {
+            acao.href = "components/personagens/personagens.html";
+            acao.textContent = "Ir para Personagens";
+        } else {
+            acao.href = "components/login/login.html";
+            acao.textContent = "Entrar / Criar Conta";
+        }
+        heroActions.appendChild(acao);
+    </script>
 </body>
 </html>

@@ -21,6 +21,14 @@ estrutura em `components/`.
       por tipo de arquivo (`styles/` vs `scripts/`)
 - [x] Removidos: `tickets.html`/`.css`/`.js`, `monstros.html`/`.css`/`.js`,
       `style.css`/`script.js`/`login.css`/`login.js` antigos da raiz
+- [x] `index.html`: CTA funcional (Entrar/Criar Conta ou Ir para
+      Personagens, conforme sessão) + cards de navegação pro Bestiário/
+      Personagens/Suporte — antes a landing não tinha nenhum caminho
+      visível pra sair dela
+- [x] `components/personagens/criacaoPersonagens.html`: placeholder de
+      estrutura (gate de login + link pra `personagens.html`) — novo
+      destino pós-login (`login.js`); layout real depende das
+      referências em `designs/mockups/`
 
 ## Pendente
 
@@ -29,7 +37,7 @@ estrutura em `components/`.
       (`COPY . .`), só confirmar
 - [ ] Conferir CORS depois que a imagem do front rodar num container (porta
       muda de `:5500` pra a do nginx) — `backend/src/app.ts`
-- [ ] Corrigir o remote `origin` do repo antigo
+- [x] Corrigir o remote `origin` do repo antigo
       (`C:\Users\claud\portfolio\JavaScript\RPGCardGame\`) ou confirmar que
       ele não é mais usado (o front vive aqui agora, `frontend/`, no repo
       principal já publicado)

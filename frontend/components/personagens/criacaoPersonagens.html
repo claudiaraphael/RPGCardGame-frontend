@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criação de Personagem — AuroraRPG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/tokens.css">
+    <link rel="stylesheet" href="../shared/base.css">
+    <link rel="stylesheet" href="../shared/components.css">
+</head>
+<body>
+    <div class="pixel-orb orb-1"></div>
+    <div class="pixel-orb orb-2"></div>
+    <div class="pixel-orb orb-3"></div>
+    <div class="pixel-orb orb-4"></div>
+
+    <header>
+        <div class="header-content">
+            <a href="../../index.html" class="brand">
+                <div class="brand-emblem">A</div>
+                <div class="brand-title"><h1>AuroraRPG</h1></div>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="../../index.html">Início</a></li>
+                <li><a href="../bestiario/monster-index.html">Bestiário</a></li>
+                <li><a href="personagens.html" class="active">Personagens</a></li>
+                <li><a href="../suporte/suporte.html">Suporte</a></li>
+            </ul>
+
+            <!-- Preenchido em runtime por ../shared/session.js -->
+            <div class="auth-bar" id="authBar" data-login-href="../login/login.html"></div>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-hero-title">
+            <h2>Criação de Personagem</h2>
+            <p>Destino pós-login — layout definitivo entra depois que as referências em frontend/designs/ forem escolhidas.</p>
+        </div>
+
+        <!-- Bloqueado se deslogado, mesmo padrão de personagens.html -->
+        <div class="gated-box" id="gatedBox" style="display: none;">
+            <h3 style="font-family: var(--font-display); font-size: 1.8rem; color: var(--c-yellow);">
+                Entre para criar um personagem
+            </h3>
+            <p style="color: #CBD5E1; max-width: 480px;">
+                A criação de personagem é exclusiva de jogadores autenticados.
+            </p>
+            <a class="btn-primary" href="../login/login.html">Ir para o Login</a>
+        </div>
+
+        <div class="panel-card" id="placeholderBox" style="display:none; max-width: 640px; margin: 0 auto; text-align: center;">
+            <h3 style="font-family: var(--font-display); color: var(--c-yellow); font-size: 1.4rem;">
+                Em construção
+            </h3>
+            <p style="color:#CBD5E1; margin: 0.75rem 0;">
+                Esta página vai concentrar a criação de personagem (raça, classe,
+                atributos, equipamento — ver referências em
+                <code>frontend/designs/mockups/</code>). Por enquanto é só
+                estrutura, sem formulário real ainda.
+            </p>
+            <p>
+                <a class="btn-primary" href="personagens.html">Ver meus personagens</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="../shared/session.js"></script>
+    <script>
+        // Gate simples — mesmo padrão de personagens.js, mas sem CRUD
+        // nenhum ainda (essa página é só placeholder de estrutura).
+        const gatedBox = document.getElementById("gatedBox");
+        const placeholderBox = document.getElementById("placeholderBox");
+
+        function atualizarEstadoAcesso() {
+            if (estaLogado()) {
+                gatedBox.style.display = "none";
+                placeholderBox.style.display = "block";
+            } else {
+                gatedBox.style.display = "flex";
+                placeholderBox.style.display = "none";
+            }
+        }
+
+        atualizarEstadoAcesso();
+        document.addEventListener("sessao-alterada", atualizarEstadoAcesso);
+    </script>
+</body>
+</html>
