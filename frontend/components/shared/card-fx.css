@@ -1,0 +1,69 @@
+/* ==========================================================
+   EFEITO DE CARTA: inclinação 3D + brilho holográfico
+   ==========================================================
+   Vale pra todo card "de jogo": .hero-nav-card (landing), .rpg-battle-card
+   (bestiário) e .character-card (personagens). A lista de seletores é a
+   mesma de card-fx.js — se criar um card novo, entra nos dois lugares.
+
+   O JS só escreve quatro variáveis no card sob o mouse (--rx, --ry, --mx,
+   --my); toda a aparência mora aqui. Sem JS (ou sem mouse), as variáveis
+   ficam nos valores padrão e o card é só um card normal. */
+
+.hero-nav-card,
+.rpg-battle-card,
+.character-card {
+  position: relative;
+  overflow: hidden;
+  /* perspective() dentro do próprio transform: não precisa de um pai com
+     perspective, então funciona igual em card solto ou dentro de grid. */
+  transform: perspective(700px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  /* curto enquanto o mouse mexe (acompanha o cursor), a volta ao repouso
+     usa o mesmo tempo — suficiente pra não "pular" ao sair. */
+  transition: transform 0.15s ease-out, border-color 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform;
+}
+
+/* Camada do brilho: um gradiente radial dourado que segue o cursor. */
+.hero-nav-card::after,
+.rpg-battle-card::after,
+.character-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;   /* senão a camada rouba o clique dos botões do card */
+  opacity: 0;
+  background:
+    radial-gradient(circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 214, 152, 0.38) 0%,
+      rgba(223, 95, 71, 0.16) 30%,
+      transparent 60%);
+  mix-blend-mode: screen;
+  transition: opacity 0.2s ease;
+}
+
+.hero-nav-card:hover::after,
+.rpg-battle-card:hover::after,
+.character-card:hover::after {
+  opacity: 1;
+}
+
+.character-card:hover {
+  border-color: #FFF;
+  box-shadow: 0 14px 32px rgba(223, 95, 71, 0.35);
+}
+
+/* Toque (sem hover) e quem pediu menos movimento: sem inclinação nem brilho. */
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .hero-nav-card,
+  .rpg-battle-card,
+  .character-card {
+    transform: none;
+    will-change: auto;
+  }
+  .hero-nav-card::after,
+  .rpg-battle-card::after,
+  .character-card::after {
+    display: none;
+  }
+}

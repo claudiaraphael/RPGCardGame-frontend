@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="../shared/tokens.css">
   <link rel="stylesheet" href="../shared/base.css">
   <link rel="stylesheet" href="../shared/components.css">
+  <link rel="stylesheet" href="../shared/card-fx.css">
   <link rel="stylesheet" href="monster-index.css">
 </head>
 <body>
@@ -23,17 +24,20 @@
   <!-- Header -->
   <header>
     <div class="header-content">
-      <a href="#" class="brand">
-        <div class="brand-emblem">M</div>
-        <div class="brand-title">
-          <h1>Monster Index</h1>
-          <p>RPG Bestiary &amp; Card Compendium</p>
-        </div>
+      <a href="../../index.html" class="brand">
+        <div class="brand-emblem">A</div>
+        <div class="brand-title"><h1>AuroraRPG</h1></div>
       </a>
 
-      <div class="header-badges">
-        <span class="badge-dnd">D&amp;D API 2014</span>
-      </div>
+      <ul class="nav-links">
+        <li><a href="../../index.html">Início</a></li>
+        <li><a href="monster-index.html" class="active">Bestiário</a></li>
+        <li><a href="../personagens/personagens.html">Personagens</a></li>
+        <li><a href="../suporte/suporte.html">Suporte</a></li>
+      </ul>
+
+      <!-- Preenchido em runtime por ../shared/session.js -->
+      <div class="auth-bar" id="authBar" data-login-href="../login/login.html"></div>
     </div>
   </header>
 
@@ -307,6 +311,8 @@
     </aside>
   </main>
 
+  <script src="../shared/session.js"></script>
+  <script src="../shared/card-fx.js"></script>
   <script type="module" src="monster-index.js"></script>
 </body>
 </html>

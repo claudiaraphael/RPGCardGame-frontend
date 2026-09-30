@@ -55,12 +55,23 @@
   padding: 1.5rem;
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
+/* O movimento (inclinação 3D) vem de shared/card-fx.css — aqui só a borda. */
 .hero-nav-card:hover {
   border-color: var(--c-yellow);
-  transform: translateY(-2px);
+}
+
+/* Container das brasas (tsParticles): atrás de tudo, no topo da página,
+   sem capturar clique. */
+#heroParticles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 620px;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .hero-nav-card h3 {

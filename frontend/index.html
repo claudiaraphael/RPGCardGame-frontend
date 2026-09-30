@@ -10,9 +10,12 @@
     <link rel="stylesheet" href="components/shared/tokens.css">
     <link rel="stylesheet" href="components/shared/base.css">
     <link rel="stylesheet" href="components/shared/components.css">
+    <link rel="stylesheet" href="components/shared/card-fx.css">
     <link rel="stylesheet" href="components/landing/landing.css">
 </head>
 <body>
+    <!-- Brasas (tsParticles) — preenchido por components/landing/landing.js -->
+    <div id="heroParticles"></div>
     <div class="pixel-orb orb-1"></div>
     <div class="pixel-orb orb-2"></div>
     <div class="pixel-orb orb-3"></div>
@@ -60,22 +63,11 @@
         </div>
     </main>
 
+    <!-- Libs de animação via CDN (sem bundler). Se caírem, a página segue funcionando. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/slim@3/tsparticles.slim.bundle.min.js"></script>
     <script src="components/shared/session.js"></script>
-    <script>
-        // Botão de entrada muda conforme sessão — evita mandar quem já
-        // está logado de volta pro login. Fica aqui (não em landing.css/js
-        // separado) porque é só essas 4 linhas; se crescer, vira arquivo.
-        const heroActions = document.getElementById("heroActions");
-        const acao = document.createElement("a");
-        acao.className = "btn-primary";
-        if (estaLogado()) {
-            acao.href = "components/personagens/personagens.html";
-            acao.textContent = "Ir para Personagens";
-        } else {
-            acao.href = "components/login/login.html";
-            acao.textContent = "Entrar / Criar Conta";
-        }
-        heroActions.appendChild(acao);
-    </script>
+    <script src="components/shared/card-fx.js"></script>
+    <script src="components/landing/landing.js"></script>
 </body>
 </html>
