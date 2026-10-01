@@ -16,8 +16,8 @@
 body {
   background-color: var(--bg-canvas);
   background-image:
-    radial-gradient(circle at 50% 12%, rgba(13, 25, 244, 0.95) 0%, transparent 70%),
-    linear-gradient(180deg, #060B68 0%, #0D19F4 35%, #081088 75%, #040845 100%);
+    radial-gradient(circle at 50% 12%, rgba(124, 58, 237, 0.55) 0%, transparent 70%),
+    linear-gradient(180deg, #0E0426 0%, #2A0D5E 35%, #1A0745 75%, #08021C 100%);
   background-attachment: fixed;
   color: #FFF;
   font-family: var(--font-body);
@@ -29,59 +29,95 @@ body {
   overflow-x: hidden;
 }
 
-/* Chamas ambiente flutuantes (decoração, mesma em toda página) */
-.pixel-orb {
-  position: absolute;
-  border-radius: 50%;
+/* Padronagem do fundo: a textura de roxo_mistico.png (riscos verticais com
+   faíscas rosadas) ladrilhada por cima do gradiente roxo. Fica numa camada
+   fixa atrás do conteúdo (z-index -1) com mix-blend-mode, pra só dar
+   textura sem lavar a cor nem atrapalhar clique/leitura. A imagem tem
+   127px de largura; ampliada 2x com pixelated pra manter o ar de pixel art. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
   pointer-events: none;
-  z-index: 0;
-  opacity: 0.75;
-  animation: floatSlow 8s ease-in-out infinite alternate;
+  background: url("roxo_mistico.png") repeat;
+  background-size: 254px auto;
+  image-rendering: pixelated;
+  opacity: 0.45;
+  mix-blend-mode: screen;
 }
 
-.orb-1 {
-  top: 60px;
-  left: 5%;
-  width: 52px;
-  height: 52px;
-  background: radial-gradient(circle, var(--c-yellow) 20%, var(--c-orange) 50%, var(--c-red) 85%);
-  box-shadow: 0 0 20px var(--c-orange-glow);
+/* Esferas do dragão (decoração, mesma em toda página).
+   Quem cria e posiciona as esferas é shared/orbs.js (pixel art gerada em
+   canvas, sem imagem nem direito autoral de terceiros) — aqui só a
+   aparência: flutuar, brilho pulsante e as faíscas (.orb-spark).
+   O tamanho e a posição de cada esfera vêm inline do JS. */
+.pixel-orb {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  image-rendering: pixelated;   /* mantém os "pixels" quadrados ao ampliar */
+  filter: drop-shadow(0 0 8px rgba(255, 140, 40, 0.85));
+  animation: floatSlow 8s ease-in-out infinite alternate,
+             glowPulse 2.4s ease-in-out infinite alternate;
 }
-.orb-2 {
-  top: 130px;
-  right: 6%;
-  width: 68px;
-  height: 68px;
-  background: radial-gradient(circle, var(--c-yellow) 25%, var(--c-orange) 55%, var(--c-red) 90%);
-  box-shadow: 0 0 25px var(--c-red-glow);
-  animation-duration: 10s;
+
+.pixel-orb.orb-olho {
+  filter: drop-shadow(0 0 8px rgba(70, 230, 210, 0.85));
+  animation-name: floatSlow, glowPulseOlho;
 }
-.orb-3 {
-  top: 500px;
-  left: 3%;
-  width: 44px;
-  height: 44px;
-  background: radial-gradient(circle, var(--c-yellow) 15%, var(--c-orange) 60%, var(--c-red) 90%);
-  animation-duration: 7s;
-}
-.orb-4 {
-  top: 800px;
-  right: 4%;
-  width: 58px;
-  height: 58px;
-  background: radial-gradient(circle, var(--c-yellow) 20%, var(--c-orange) 50%, var(--c-red) 85%);
-  box-shadow: 0 0 22px var(--c-orange-glow);
-  animation-duration: 9s;
+
+.pixel-orb.orb-portal {
+  filter: drop-shadow(0 0 10px rgba(167, 100, 255, 0.9));
+  animation-name: floatSlow, glowPulsePortal;
 }
 
 @keyframes floatSlow {
-  0% { transform: translateY(0px) rotate(0deg); }
-  100% { transform: translateY(-24px) rotate(8deg); }
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-24px); }
+}
+
+@keyframes glowPulse {
+  0%   { filter: drop-shadow(0 0 5px rgba(255, 140, 40, 0.6)); }
+  100% { filter: drop-shadow(0 0 18px rgba(255, 190, 70, 1)); }
+}
+
+@keyframes glowPulseOlho {
+  0%   { filter: drop-shadow(0 0 5px rgba(70, 230, 210, 0.6)); }
+  100% { filter: drop-shadow(0 0 18px rgba(150, 255, 235, 1)); }
+}
+
+/* Portal pulsa (brilho e tamanho) em vez de só brilhar */
+@keyframes glowPulsePortal {
+  0%   { filter: drop-shadow(0 0 6px rgba(150, 80, 255, 0.7));  scale: 0.9; }
+  100% { filter: drop-shadow(0 0 22px rgba(200, 150, 255, 1));  scale: 1.12; }
+}
+
+/* Faíscas: cruzinhas pixeladas que piscam ao redor da esfera. */
+.orb-spark {
+  position: absolute;
+  background: #FFF6D5;
+  clip-path: polygon(35% 0, 65% 0, 65% 35%, 100% 35%, 100% 65%, 65% 65%,
+                     65% 100%, 35% 100%, 35% 65%, 0 65%, 0 35%, 35% 35%);
+  opacity: 0;
+  animation: twinkle 2.2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.3); }
+  50%      { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-orb { animation: none; }
+  .orb-spark { animation: none; opacity: 0.8; }
 }
 
 /* Header fixo compartilhado */
 header {
-  background: rgba(6, 11, 104, 0.94);
+  background: rgba(16, 6, 40, 0.94);
   backdrop-filter: blur(14px);
   border-bottom: 2px solid var(--c-red);
   padding: 0.85rem 2rem;

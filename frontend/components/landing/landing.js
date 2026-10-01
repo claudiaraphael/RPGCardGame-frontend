@@ -77,9 +77,10 @@ function iniciarBrasas() {
         number: { value: 45 },
         color: { value: ["#FFD698", "#DF5F47", "#BE1818"] }, // --c-yellow/--c-orange/--c-red
         shape: { type: "circle" },
-        size: { value: { min: 1, max: 3.5 } },
+        size: { value: { min: 1.5, max: 4.5 } },
+        shadow: { enable: true, color: "#DF5F47", blur: 12 }, // halo de brasa
         opacity: {
-          value: { min: 0.3, max: 0.9 },
+          value: { min: 0.5, max: 1 },
           animation: { enable: true, speed: 0.8, sync: false },
         },
         move: {

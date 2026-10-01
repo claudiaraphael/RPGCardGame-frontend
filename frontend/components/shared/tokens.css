@@ -19,10 +19,10 @@
   --c-red-glow: rgba(190, 24, 24, 0.55);
 
   /* Superfícies */
-  --bg-canvas: #0A12C2;
-  --bg-midnight: #060B68;
-  --bg-card-surface: #0E164D;
-  --bg-panel: rgba(10, 16, 68, 0.92);
+  --bg-canvas: #1A0745;
+  --bg-midnight: #12052E;
+  --bg-card-surface: #1A0B3F;
+  --bg-panel: rgba(24, 10, 58, 0.92);
   --border-panel: rgba(223, 95, 71, 0.42);
   --border-blue: rgba(56, 97, 251, 0.45);
 
