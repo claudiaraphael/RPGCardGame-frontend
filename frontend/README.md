@@ -11,7 +11,7 @@ própria (componente secundário) e, por meio dela, com uma API externa pública
 | Módulo | Papel | Repositório |
 | --- | --- | --- |
 | Interface (este repo) | Componente principal | https://github.com/claudiaraphael/RPGCardGame-frontend |
-| API (back-end) | Segunda componente: regras, login, SQLite | `<URL do repositório do backend>` |
+| API (back-end) | Segunda componente: regras, login, SQLite | https://github.com/claudiaraphael/RPGCardGame |
 | D&D 5e API | Serviço externo público | https://www.dnd5eapi.co/ |
 
 ## Arquitetura
